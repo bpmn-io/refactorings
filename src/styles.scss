@@ -1,0 +1,64 @@
+@use "@carbon/react";
+@use "@carbon/react/scss/themes";
+@use "@carbon/react/scss/theme";
+
+:root {
+	@include theme.theme(themes.$g10);
+}
+
+@import '@carbon/colors';
+@import '@carbon/styles/scss/utilities/box-shadow';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  background-color: $white;
+}
+
+body {
+  display: flex;
+}
+
+.bjs-powered-by {
+  display: none;
+}
+
+#container {
+  flex-grow: 1;
+}
+
+#properties {
+  background: #f8f8f8;
+  border-left: solid 1px #ccc;
+  width: 300px;
+}
+
+.suggestions-overlay {
+  display: flex;
+
+  .suggest-refactoring {
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  svg {
+    margin-block-start: 0 !important;
+  }
+}
+
+.djs-overlays.djs-element-hidden {
+  display: block !important;
+}
+
