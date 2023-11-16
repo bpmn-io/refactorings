@@ -2,7 +2,7 @@
 
 This is a prototype for a BPMN editor that uses AI to suggest [refactorings](src/features/handlers/).
 
-![Screenshot](docs/screenshot.png)
+![Example](docs/example.gif)
 
 ## Setup
 

@@ -62,3 +62,22 @@ body {
   display: block !important;
 }
 
+.suggestions-overlay-element {
+  z-index: 100000;
+}
+
+.suggestions-overlay-global {
+  z-index: 100001;
+}
+
+.suggestions-overlays-rect {
+  fill: #0f62fe;
+  fill-opacity: 0.1;
+  stroke: #0f62fe;
+  stroke-width: 2px;
+}
+
+.suggestions-overlays-active .suggestions-overlay-element,
+.suggestions-overlays-active .djs-overlay-context-pad {
+  display: none;
+}

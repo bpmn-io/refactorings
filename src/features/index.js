@@ -1,10 +1,10 @@
-import SuggestionsOverlays from './SuggestionsOverlays';
+import CommandStackPreview from './CommandStackPreview';
 import Refactorings from './Refactorings';
-import Commands from './cmd';
+import SuggestionsOverlays from './SuggestionsOverlays';
 
 export default {
-  __depends__: [ Commands ],
-  __init__: [ 'refactorings', 'suggestionsOverlays' ],
+  __init__: [ 'commandStackPreview', 'refactorings', 'suggestionsOverlays' ],
+  commandStackPreview: [ 'type', CommandStackPreview ],
   refactorings: [ 'type', Refactorings ],
   suggestionsOverlays: [ 'type', SuggestionsOverlays ]
 };

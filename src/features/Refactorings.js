@@ -11,6 +11,8 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
+const MOCK = false;
+
 export default class Refactorings {
   constructor(injector) {
     this._handlers = handlers.map(handler => {
@@ -38,19 +40,21 @@ export default class Refactorings {
 
     console.log('system prompt:', systemPrompt);
 
-    const chatCompletion = await openai.chat.completions.create({
-      messages: [
-        {
-          'role': 'system',
-          'content': systemPrompt
-        },
-        {
-          'role': 'user',
-          'content': `Can the following task be replaced by one of the patterns: ${ elementType } "${ elementName }"?`
-        }
-      ],
-      model: 'gpt-4'
-    });
+    const chatCompletion = MOCK
+      ? getMockChatCompletion(elementType, elementName)
+      : await openai.chat.completions.create({
+        messages: [
+          {
+            'role': 'system',
+            'content': systemPrompt
+          },
+          {
+            'role': 'user',
+            'content': `Can the following task be replaced by one of the patterns: ${ elementType } "${ elementName }"?`
+          }
+        ],
+        model: 'gpt-4'
+      });
 
     const { choices = [] } = chatCompletion;
 
@@ -115,4 +119,32 @@ ${ data.description }`;
 If you can find an answer, reply with a JSON object that has all the required
 properties. Your reply must ONLY be the JSON. If you can't find an answer reply,
 with NULL.`;
+}
+
+function getMockChatCompletion(elementType, elementName) {
+  let refactoring = null;
+
+  if (elementType === 'Undefined Task' && elementName === 'Send Slack notification') {
+    refactoring = {
+      id: 'slack-outbound-connector'
+    };
+  } else if (elementType === 'User Task' && elementName === 'Send email to customer and wait for reply') {
+    refactoring = {
+      id: 'automate-send-and-wait',
+      sendTaskName: 'Send email to customer',
+      intermediateCatchEventName: 'Wait for reply'
+    };
+  }
+
+  console.log('mock refactoring:', refactoring);
+
+  return {
+    choices: [
+      {
+        message: {
+          content: JSON.stringify(refactoring)
+        }
+      }
+    ]
+  };
 }

@@ -6,54 +6,40 @@ import Template from '../templates/slack-outbound.json';
  * @implements {import("./Handler").default}
  */
 export default class SlackOutboundConnector {
-  constructor(bpmnFactory, complexPreview, elementFactory, moddleCopy, elementTemplates) {
-    this._bpmnFactory = bpmnFactory;
-    this._complexPreview = complexPreview;
-    this._elementFactory = elementFactory;
-    this._moddleCopy = moddleCopy;
+  constructor(
+      commandStackPreview,
+      elementTemplates
+  ) {
+    this._commandStackPreview = commandStackPreview;
     this._elementTemplates = elementTemplates;
   }
 
   getMetaData() {
     return {
       id: 'slack-outbound-connector',
-      description: 'An intermediate throw event or send task "Send Slack message" can be replaced with an intermediate throw event with a Slack outbound connector template applied. Example input: Task "Send Slack notification" Example output: { "id": "slack-outbound-connector" }'
+      description: `An intermediate throw event or send task "Send Slack
+message" can be replaced with an intermediate throw event with a Slack outbound
+connector template applied. Example input: Task "Send Slack notification"
+Example output: { "id": "slack-outbound-connector" }`.split('\n').map(line => line.trim()).join(' '),
     };
   }
 
-  refactor(element, refactoring) {
-    this._elementTemplates.applyTemplate(element, Template);
-  }
-
   preview(element, refactoring) {
-    const { businessObject } = element;
+    this._commandStackPreview.enable();
 
-    const newBusinessObject = this._bpmnFactory.create(businessObject.$type);
+    this._elementTemplates.applyTemplate(element, Template);
 
-    this._moddleCopy.copyElement(businessObject, newBusinessObject);
-
-    newBusinessObject.set('zeebe:modelerTemplateIcon', Template.icon.contents);
-
-    const newElement = this._elementFactory.createShape({
-      type: newBusinessObject.$type,
-      businessObject: newBusinessObject,
-      x: element.x,
-      y: element.y
-    });
-
-    this._complexPreview.create({
-      removed: [
-        element
-      ],
-      created: [
-        newElement
-      ]
-    });
-
-    return () => this._complexPreview.cleanUp();
+    return {
+      cancel: () => this._commandStackPreview.disable(),
+      ok: () => this._commandStackPreview.disable(false),
+      elements: this._commandStackPreview.getElementsChanged()
+    };
   }
 
   static priority = 1000;
 }
 
-SlackOutboundConnector.$inject = [ 'bpmnFactory', 'complexPreview', 'elementFactory', 'moddleCopy', 'elementTemplates' ];
+SlackOutboundConnector.$inject = [
+  'commandStackPreview',
+  'elementTemplates'
+];

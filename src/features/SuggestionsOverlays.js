@@ -1,23 +1,40 @@
-import React, {
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback } from 'react';
 
 import { render } from 'react-dom';
 
-import { Button, ButtonSet, Loading, InlineLoading } from '@carbon/react';
+import { Button } from '@carbon/react';
 
-import { Checkmark, Close, MagicWand } from '@carbon/icons-react';
+import {
+  Checkmark,
+  Close,
+  MagicWand
+} from '@carbon/icons-react';
+
+import {
+  attr as svgAttr,
+  clear as svgClear,
+  create as svgCreate
+} from 'tiny-svg';
 
 import { domify } from 'min-dom';
 
+import { getBBox } from 'diagram-js/lib/util/Elements';
+
+const ELEMENT_OVERLAY_TYPE = 'element-suggestions-overlays',
+      GLOBAL_OVERLAY_TYPE = 'global-suggestions-overlays';
+
+const RECT_PADDING = 12;
+
+const SUGGESTIONS_OVERLAYS_ACTIVE_CLASS = 'suggestions-overlays-active';
+
+const LAYER_NAME = 'suggestions-overlays';
+
 export default class SuggestionsOverlays {
-  constructor(eventBus, overlays, refactorings) {
+  constructor(eventBus, overlays, refactorings, injector, canvas) {
     this._overlays = overlays;
     this._refactorings = refactorings;
+    this._injector = injector;
+    this._canvas = canvas;
 
     eventBus.on([
       'shape.added',
@@ -26,7 +43,7 @@ export default class SuggestionsOverlays {
       const { element } = event;
 
       if (!isLabel(element)) {
-        this.addSuggestionsOverlays(element);
+        this.addElementOverlay(element);
       }
     });
   }
@@ -35,12 +52,12 @@ export default class SuggestionsOverlays {
     const suggestedRefactoring = await this._refactorings.getSuggestedRefactoring(element);
 
     if (suggestedRefactoring) {
-      this.addSuggestionsOverlays(element, suggestedRefactoring);
+      this.addElementOverlay(element, suggestedRefactoring);
     }
   }
 
-  async addSuggestionsOverlays(element) {
-    this._overlays.remove({ element });
+  async addElementOverlay(element) {
+    this._overlays.remove({ element, type: ELEMENT_OVERLAY_TYPE });
 
     const suggestedRefactoring = await this._refactorings.getSuggestedRefactoring(element);
 
@@ -50,9 +67,7 @@ export default class SuggestionsOverlays {
 
     const overlays = this._overlays;
 
-    const html = domify('<div class="suggestions-overlay"></div>');
-
-    this._render(html, element, suggestedRefactoring);
+    const html = domify('<div class="suggestions-overlay suggestions-overlay-element"></div>');
 
     const overlay = {
       position: {
@@ -67,55 +82,104 @@ export default class SuggestionsOverlays {
       scale: true
     };
 
-    overlays.add(element, 'suggestions', overlay);
+    overlays.add(element, ELEMENT_OVERLAY_TYPE, overlay);
+
+    render(<ElementOverlay element={ element } injector={ this._injector } suggestedRefactoring={ suggestedRefactoring } />, html);
   }
 
-  _render(container, element, suggestedRefactoring) {
-    render(<App element={ element } refactorings={ this._refactorings } suggestedRefactoring={ suggestedRefactoring } />, container);
+  addGlobalOverlay(element, suggestedRefactoring, { cancel, ok, elements }) {
+    this._canvas.getContainer().classList.add(SUGGESTIONS_OVERLAYS_ACTIVE_CLASS);
+
+    const overlays = this._overlays;
+
+    const html = domify('<div class="suggestions-overlay suggestions-overlay-global"></div>');
+
+    const bounds = getBBox(elements);
+
+    const overlay = {
+      position: {
+        top: bounds.y - 24,
+        left: bounds.x - 24
+      },
+      html,
+      show: {
+        minZoom: 0.5,
+        maxZoom: 5.0
+      },
+      scale: true
+    };
+
+    overlays.add(this._canvas.getRootElement(), GLOBAL_OVERLAY_TYPE, overlay);
+
+    render(<GlobalOverlay element={ element } cancel={ cancel } ok={ ok } injector={ this._injector } suggestedRefactoring={ suggestedRefactoring } />, html);
+
+    const rect = svgCreate('rect');
+
+    rect.classList.add('suggestions-overlays-rect');
+
+    svgAttr(rect, {
+      x: bounds.x - RECT_PADDING,
+      y: bounds.y - RECT_PADDING,
+      width: bounds.width + RECT_PADDING * 2,
+      height: bounds.height + RECT_PADDING * 2,
+      rx: 4
+    });
+
+    this._canvas.getLayer(LAYER_NAME).appendChild(rect);
   }
 }
 
-function App({ element, refactorings, suggestedRefactoring }) {
-  const [ previewing, setPreviewing ] = useState(false);
-  const cleanUp = useRef();
+function ElementOverlay({ element, injector, suggestedRefactoring }) {
+  const overlays = injector.get('overlays'),
+        refactorings = injector.get('refactorings'),
+        suggestionsOverlays = injector.get('suggestionsOverlays');
 
   const suggestRefactoring = useCallback(async () => {
-    setPreviewing(true);
+    const {
+      cancel,
+      ok,
+      elements
+    } = refactorings.preview(element, suggestedRefactoring);
 
-    cleanUp.current = refactorings.preview(element, suggestedRefactoring);
+    overlays.remove({ element, type: ELEMENT_OVERLAY_TYPE });
+
+    suggestionsOverlays.addGlobalOverlay(element, suggestedRefactoring, {
+      cancel,
+      ok,
+      elements
+    });
   }, [ refactorings, suggestedRefactoring ]);
-
-  const applyRefactoring = useCallback(() => {
-    cleanUp.current();
-
-    setPreviewing(false);
-
-    refactorings.refactor(element, suggestedRefactoring);
-  }, [ cleanUp, refactorings, suggestedRefactoring ]);
-
-  const cancelRefactoring = useCallback(() => {
-    cleanUp.current();
-
-    setPreviewing(false);
-  }, [ cleanUp ]);
-
-  if (previewing) {
-    return <>
-      <Button className="apply-refactoring" hasIconOnly onClick={ applyRefactoring } label="Apply refactoring">
-        <Checkmark />
-      </Button>
-      <Button className="apply-refactoring" kind="secondary" hasIconOnly onClick={ cancelRefactoring } label="Apply refactoring">
-        <Close />
-      </Button>
-    </>;
-  }
 
   return <Button className="suggest-refactoring" hasIconOnly onClick={ suggestRefactoring } label="Suggest refactoring">
     <MagicWand />
   </Button>;
 }
 
-SuggestionsOverlays.$inject = [ 'eventBus', 'overlays', 'refactorings' ];
+function GlobalOverlay({ element, cancel, ok, injector, suggestedRefactoring }) {
+  const canvas = injector.get('canvas'),
+        overlays = injector.get('overlays');
+
+  const onClick = useCallback(callback => {
+    callback();
+
+    canvas.getContainer().classList.remove(SUGGESTIONS_OVERLAYS_ACTIVE_CLASS);
+
+    overlays.remove({ type: GLOBAL_OVERLAY_TYPE });
+
+    svgClear(canvas.getLayer(LAYER_NAME));
+  }, [ canvas, overlays ]);
+
+  return <>
+    <Button className="ok-refactoring" hasIconOnly onClick={ () => onClick(ok) } label="Apply refactoring">
+      <Checkmark />
+    </Button>
+    <Button className="cancel-refactoring" kind="secondary" hasIconOnly onClick={ () => onClick(cancel) } label="Cancel refactoring">
+      <Close />
+    </Button>
+  </>;
+}
+
+SuggestionsOverlays.$inject = [ 'eventBus', 'overlays', 'refactorings', 'injector', 'canvas' ];
 
 function isLabel(element) {
   return element.labelTarget;
