@@ -71,8 +71,8 @@ export default class SuggestionsOverlays {
 
     const overlay = {
       position: {
-        top: -24,
-        left: -24
+        bottom: 20,
+        right: 20
       },
       html,
       show: {

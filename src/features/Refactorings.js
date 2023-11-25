@@ -11,7 +11,7 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
-const MOCK = false;
+const MOCK = true;
 
 export default class Refactorings {
   constructor(injector) {
@@ -50,7 +50,7 @@ export default class Refactorings {
           },
           {
             'role': 'user',
-            'content': `Can the following task be replaced by one of the patterns: ${ elementType } "${ elementName }"?`
+            'content': `Can the following element be replaced by one of the patterns: ${ elementType } "${ elementName }"?`
           }
         ],
         model: 'gpt-4'

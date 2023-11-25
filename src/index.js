@@ -20,6 +20,8 @@ import ElementTemplateIconRenderer from '@bpmn-io/element-template-icon-renderer
 
 import zeebeModdlePackage from 'zeebe-bpmn-moddle/resources/zeebe';
 
+import { ImprovedCanvasModule } from '@camunda/improved-canvas';
+
 import FeaturesModule from './features';
 
 import 'bpmn-js/dist/assets/diagram-js.css';
@@ -52,6 +54,7 @@ const modeler = new Modeler({
     CloudElementTemplatesPropertiesProviderModule,
     ElementTemplateIconRenderer,
     ElementTemplateChooserModule,
+    ImprovedCanvasModule
   ],
   keyboard: {
     bindTo: document,
