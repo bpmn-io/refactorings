@@ -11,7 +11,9 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
-const MOCK = true;
+const systemPrompt = `You are a BPMN expert. Your given a description of a BPMN
+task and your task is to figure out which tool to use to refactor it. What
+refactoring action can be performed on the the element given by the user.`.split('\n').map(line => line.trim()).join(' ');
 
 export default class Refactorings {
   constructor(injector) {
@@ -28,123 +30,110 @@ export default class Refactorings {
    * @returns {Object|null}
    */
   async getSuggestedRefactoring(element) {
-    const metaData = this._handlers.map(handler => {
-      return handler.getMetaData();
+    const tools = this._handlers.map(handler => {
+      return {
+        type: 'function',
+        function: handler.getFunctionDescription()
+      };
     });
 
     const elementType = getTypeString(element.businessObject);
 
     const elementName = element.businessObject.name;
 
-    const systemPrompt = getSystemPrompt(metaData);
+    const response = await openai.chat.completions.create({
+      messages: [
+        {
+          'role': 'system',
+          'content': systemPrompt
+        },
+        {
+          'role': 'user',
+          'content': `${ elementType } "${ elementName }"?`
+        }
+      ],
+      model: 'gpt-4-1106-preview',
+      tool_choice: 'auto',
+      tools
+    });
 
-    console.log('system prompt:', systemPrompt);
+    console.log('response', response);
 
-    const chatCompletion = MOCK
-      ? getMockChatCompletion(elementType, elementName)
-      : await openai.chat.completions.create({
-        messages: [
-          {
-            'role': 'system',
-            'content': systemPrompt
-          },
-          {
-            'role': 'user',
-            'content': `Can the following element be replaced by one of the patterns: ${ elementType } "${ elementName }"?`
-          }
-        ],
-        model: 'gpt-4'
-      });
+    const message = getMessage(response);
 
-    const { choices = [] } = chatCompletion;
+    console.log('message', message);
 
-    if (!choices.length) {
+    const tool = getTool(response);
+
+    console.log('tool', tool);
+
+    if (!tool) {
       return null;
     }
 
-    const { message } = choices[ 0 ];
+    const handler = this._handlers.find(handler => {
+      return handler.getFunctionDescription().name === tool.name;
+    });
 
-    const { content } = message;
+    if (!handler.validate(element, tool)) {
+      console.log('refactoring not valid', tool);
 
-    return content === 'NULL' ? null : JSON.parse(content);
+      return null;
+    }
+
+    return tool;
   }
 
   refactor(element, refactoring) {
     const handler = this._handlers.find(handler => {
-      return handler.getMetaData().id === refactoring.id;
+      return handler.getFunctionDescription().name === refactoring.name;
     });
 
     if (!handler) {
       throw new Error(`No handler found for refactoring ${ refactoring.id }`);
     }
 
-    return handler.refactor(element, refactoring);
+    return handler.refactor(element, refactoring.arguments);
   }
 
   preview(element, refactoring) {
     const handler = this._handlers.find(handler => {
-      return handler.getMetaData().id === refactoring.id;
+      return handler.getFunctionDescription().name === refactoring.name;
     });
 
     if (!handler) {
       throw new Error(`No handler found for refactoring ${ refactoring.id }`);
     }
 
-    return handler.preview(element, refactoring);
+    return handler.preview(element, refactoring.arguments);
   }
 }
 
 Refactorings.$inject = [ 'injector' ];
 
-/**
- * Get the system prompt for the refactoring.
- *
- * @param {import('./handlers/Handler').MetaData[]} metaData
- *
- * @returns {string}
- */
-function getSystemPrompt(metaData) {
-  return `You are a BPMN expert. Your given a description of a BPMN task and
-your task is to figure you whether this task could be replaced by one of the
-following patterns:
-
-${
-  metaData.map((data, index) => {
-    return `${ index + 1 }. ${ data.id }
-
-${ data.description }`;
-  }).join('\n\n')
+function getMessage(response) {
+  return response.choices[0]?.message?.content;
 }
 
-If you can find an answer, reply with a JSON object that has all the required
-properties. Your reply must ONLY be the JSON. If you can't find an answer reply,
-with NULL.`;
-}
+function getTool(response) {
+  const toolCalls = response.choices[0]?.message?.tool_calls;
 
-function getMockChatCompletion(elementType, elementName) {
-  let refactoring = null;
-
-  if (elementType === 'Undefined Task' && elementName === 'Send Slack notification') {
-    refactoring = {
-      id: 'slack-outbound-connector'
-    };
-  } else if (elementType === 'User Task' && elementName === 'Send email to customer and wait for reply') {
-    refactoring = {
-      id: 'automate-send-and-wait',
-      sendTaskName: 'Send email to customer',
-      intermediateCatchEventName: 'Wait for reply'
-    };
+  if (!toolCalls) {
+    return null;
   }
 
-  console.log('mock refactoring:', refactoring);
+  const fn = toolCalls[ 0 ]?.function;
+
+  if (!fn) {
+    return null;
+  }
+
+  let { name, arguments: args } = fn;
+
+  args = JSON.parse(args);
 
   return {
-    choices: [
-      {
-        message: {
-          content: JSON.stringify(refactoring)
-        }
-      }
-    ]
+    name,
+    arguments: args
   };
 }

@@ -1,8 +1,8 @@
 import type { Element } from 'bpmn-js/lib/model/Types';
 
-export type MetaData = {
-  id: string;
-  description: string;
+export type FunctionDescription = {
+  name: string;
+  description: Object;
 };
 
 export type Preview = {
@@ -11,7 +11,13 @@ export type Preview = {
   elements: Element[];
 };
 
+export type Refactoring = {
+  name: string;
+  arguments: any[];
+};
+
 export default interface Handler {
-  getMetadata(): MetaData;
-  preview(): Preview;
+  getFunctionDescription(): FunctionDescription;
+  preview(element: Element, refactoring: Refactoring): Preview;
+  validate(element: Element, refactoring: Refactoring) : boolean;
 }

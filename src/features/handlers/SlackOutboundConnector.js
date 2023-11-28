@@ -14,13 +14,17 @@ export default class SlackOutboundConnector {
     this._elementTemplates = elementTemplates;
   }
 
-  getMetaData() {
+  getFunctionDescription() {
     return {
-      id: 'slack-outbound-connector',
-      description: `An intermediate throw event or send task "Send Slack
-message" can be replaced with an intermediate throw event with a Slack outbound
-connector template applied. Example input: Task "Send Slack notification"
-Example output: { "id": "slack-outbound-connector" }`.split('\n').map(line => line.trim()).join(' '),
+      'name': 'slack-outbound-connector',
+      'parameters': {
+        'type': 'object',
+        'properties': {},
+        'required': []
+      },
+      'description': `Can perform the following refactoring action: A Slack
+outbound connector that can be applied to an element with a name similar to
+"Send Slack notification.`.split('\n').map(line => line.trim()).join(' '),
     };
   }
 
@@ -34,6 +38,10 @@ Example output: { "id": "slack-outbound-connector" }`.split('\n').map(line => li
       ok: () => this._commandStackPreview.disable(false),
       elements: this._commandStackPreview.getElementsChanged()
     };
+  }
+
+  validate(element, refactoring) {
+    return refactoring.name === 'slack-outbound-connector';
   }
 
   static priority = 1000;

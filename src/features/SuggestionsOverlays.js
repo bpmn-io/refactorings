@@ -65,9 +65,13 @@ export default class SuggestionsOverlays {
       return;
     }
 
+    console.log('suggested refactoring for element', element, suggestedRefactoring);
+
     const overlays = this._overlays;
 
     const html = domify('<div class="suggestions-overlay suggestions-overlay-element"></div>');
+
+    html.title = `Suggested refactoring: ${ suggestedRefactoring.name }`;
 
     const overlay = {
       position: {

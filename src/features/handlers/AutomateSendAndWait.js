@@ -24,14 +24,30 @@ export default class AutomateSendAndWait {
     this._spaceTool = spaceTool;
   }
 
-  getMetaData() {
+  getFunctionDescription() {
     return {
-      id: 'automate-send-and-wait',
-      description: `A user task "Send a message and wait for a response" can be
-automated by replacing it with a send task and an intermediate catch event.
-Example input: User Task "Send a message and wait for a response" Example
-Output: { "id": "automate-send-and-wait", "sendTaskName": "Send a message",
-"intermediateCatchEventName": "Wait for response" }`.split('\n').map(line => line.trim()).join(' '),
+      'name': 'automate-send-and-wait',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'sendTaskName': {
+            'type': 'string',
+            'description': 'The name of the send task'
+          },
+          'intermediateCatchEventName': {
+            'type': 'string',
+            'description': 'The name of the intermediate catch event name'
+          }
+        },
+        'required': [
+          'sendTaskName',
+          'intermediateCatchEventName'
+        ]
+      },
+      'description': `Can perform the following refactoring action: A task with
+the name that indicates sending a message and then waiting for an answer can be
+replaced by a send task that sends the message and an intermediate catch event
+that waits for an answer.`.split('\n').map(line => line.trim()).join(' '),
     };
   }
 
@@ -110,6 +126,12 @@ Output: { "id": "automate-send-and-wait", "sendTaskName": "Send a message",
       ok: () => this._commandStackPreview.disable(false),
       elements: this._commandStackPreview.getElementsChanged()
     };
+  }
+
+  validate(element, refactoring) {
+    return refactoring.name === 'automate-send-and-wait'
+      && refactoring.arguments.sendTaskName
+      && refactoring.arguments.intermediateCatchEventName;
   }
 
   static priority = 1000;
