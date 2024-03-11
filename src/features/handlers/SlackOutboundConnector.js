@@ -17,6 +17,7 @@ export default class SlackOutboundConnector {
   getMetaData() {
     return {
       id: 'slack-outbound-connector',
+      label: 'Replace with Outbound Connector',
       description: `An intermediate throw event or send task "Send Slack
 message" can be replaced with an intermediate throw event with a Slack outbound
 connector template applied. Example input: Task "Send Slack notification"

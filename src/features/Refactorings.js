@@ -38,8 +38,6 @@ export default class Refactorings {
 
     const systemPrompt = getSystemPrompt(metaData);
 
-    console.log('system prompt:', systemPrompt);
-
     const chatCompletion = MOCK
       ? getMockChatCompletion(elementType, elementName)
       : await openai.chat.completions.create({
@@ -126,13 +124,15 @@ function getMockChatCompletion(elementType, elementName) {
 
   if (elementType === 'Undefined Task' && elementName === 'Send Slack notification') {
     refactoring = {
-      id: 'slack-outbound-connector'
+      id: 'slack-outbound-connector',
+      label: 'Replace with Slack Connector'
     };
   } else if (elementType === 'User Task' && elementName === 'Send email to customer and wait for reply') {
     refactoring = {
       id: 'automate-send-and-wait',
       sendTaskName: 'Send email to customer',
-      intermediateCatchEventName: 'Wait for reply'
+      intermediateCatchEventName: 'Wait for reply',
+      label: 'Split task into Task and catch event'
     };
   }
 

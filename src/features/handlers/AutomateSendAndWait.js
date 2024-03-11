@@ -27,6 +27,7 @@ export default class AutomateSendAndWait {
   getMetaData() {
     return {
       id: 'automate-send-and-wait',
+      label: 'Split task into Task and catch event',
       description: `A user task "Send a message and wait for a response" can be
 automated by replacing it with a send task and an intermediate catch event.
 Example input: User Task "Send a message and wait for a response" Example
@@ -74,6 +75,9 @@ Output: { "id": "automate-send-and-wait", "sendTaskName": "Send a message",
       type: 'bpmn:IntermediateCatchEvent',
       businessObject: intermediateCatchEventBusinessObject,
     });
+
+
+    // ToDo: handle as multi-command
 
     this._modeling.createShape(intermediateCatchEvent, {
       x: element.x + element.width + 80,
