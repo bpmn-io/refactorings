@@ -42,7 +42,7 @@ export default class RefactoringActionsEntryProvider {
 
     const options = refactorings.reduce((acc, refactoring) => {
       acc[refactoring.id] = {
-        label: refactoring.label || refactoring.id,
+        label: refactoring.label || refactoring.name,
         action: () => {
           this._refactorings.preview(element, refactoring);
         }

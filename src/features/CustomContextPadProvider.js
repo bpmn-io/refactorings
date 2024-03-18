@@ -83,7 +83,7 @@ function RefactoringActionItem(props) {
     setClass
   } = props;
 
-  const [ loadingState, setLoadingState ] = useState('LOADING');
+  const [ loadingState, setLoadingState ] = useState('INITIAL');
 
   useEffect(() => {
     const load = async () => {
@@ -102,6 +102,9 @@ function RefactoringActionItem(props) {
   }, []);
 
   return html`
+    ${loadingState === 'INITIAL' ? html`<div onClick=${() => setLoadingState('LOADING')} role="button">
+      <${RefactoringIcon} title="Suggest refactoring"/>
+      </div>` : null}
     ${loadingState === 'LOADING' ? html`<${LoadingIcon} />` : null}
     ${loadingState === 'EMPTY' ? html`<${RefactoringIcon} domclass="no-refactorings-available" title="No suggestions available"/>` : null}
     ${loadingState === 'LOADED' ? html`<div onClick=${openPopupMenu} role="button">
