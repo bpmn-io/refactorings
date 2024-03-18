@@ -20,10 +20,16 @@ export default class RefactoringActionsEntryProvider {
   async fetchRefactoringActions(element) {
 
     // ToDo: Implement caching here
+    const cachedValue = this._refactoringOptions.get(element);
+
+    if (cachedValue) {
+      return cachedValue;
+    }
+
     const suggestedRefactoring = await this._refactorings.getSuggestedRefactoring(element);
 
     this._refactoringOptions.set(element, [ suggestedRefactoring ]);
-    return suggestedRefactoring;
+    return [ suggestedRefactoring ];
   }
 
   register() {
