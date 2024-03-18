@@ -102,20 +102,28 @@ body {
     &[data-group="suggest-refactoring"].active {
       background-color: #0f62fe;
 
-      .entry.suggest-refactoring {
+      .entry {
         background-color: #0f62fe;
         color: white;
       
         &:hover {
-          background-color: #0050e6;
+          background: #0050e6 !important;
         }
+      }
+    }
+
+    &[data-group="suggest-refactoring"].empty {
+      background-color: #c6c6c6;
+
+      .entry {
+        background: #c6c6c6 !important;
+        color: #8d8d8d;
       }
     }
   }
 }
 
 .suggest-refactoring {
-  --cds-interactive: white;
   .cds--loading {
     line-height: 1em;
   }
