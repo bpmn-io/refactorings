@@ -59,10 +59,6 @@ export default class Refactorings {
 
     console.log('response', response);
 
-    const message = getMessage(response);
-
-    console.log('message', message);
-
     const tool = getTool(response);
 
     console.log('tool', tool);
@@ -110,10 +106,6 @@ export default class Refactorings {
 }
 
 Refactorings.$inject = [ 'injector' ];
-
-function getMessage(response) {
-  return response.choices[0]?.message?.content;
-}
 
 function getTool(response) {
   const toolCalls = response.choices[0]?.message?.tool_calls;

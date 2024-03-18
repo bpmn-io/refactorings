@@ -1,18 +1,46 @@
 export default class CustomContextPadProvider {
-  constructor(contextPad) {
+  constructor(contextPad, refactorings, suggestionsOverlays, popupMenu, refactoringActionsEntryProvider) {
     contextPad.registerProvider(100, this);
+
+    this._refactorings = refactorings;
+    this._suggestionOverlays = suggestionsOverlays;
+    this._popupMenu = popupMenu;
+    this._refactoringActionsEntryProvider = refactoringActionsEntryProvider;
+  }
+
+  _getPopupMenuPosition(event) {
+    const target = event.currentTarget;
+    const Y_OFFSET = 10;
+
+
+    const targetBB = target.getBoundingClientRect();
+    return {
+      x: targetBB.left,
+      y: targetBB.bottom + Y_OFFSET
+    };
   }
 
   getContextPadEntries(element) {
+    const self = this;
+
     return function(entries) {
       return {
         ...entries,
         alert: {
           action: async (event, target, autoActivate) => {
-            const suggestedRefactoring = await this._refactorings.getSuggestedRefactoring(element);
+            const suggestedRefactoring = await self._refactoringActionsEntryProvider.fetchRefactoringActions(element);
 
             if (suggestedRefactoring) {
-              this.addElementOverlay(element, suggestedRefactoring);
+              self._popupMenu.open(element, 'refactoring-actions',
+                self._getPopupMenuPosition(event),
+                {
+                  title: 'Apply Refactorings',
+                  width: 350
+                }
+              );
+            }
+            else {
+              console.log('No refactorings');
             }
           },
           group: 'suggest-refactoring',
@@ -37,5 +65,9 @@ export default class CustomContextPadProvider {
 }
 
 CustomContextPadProvider.$inject = [
-  'contextPad'
+  'contextPad',
+  'refactorings',
+  'suggestionsOverlays',
+  'popupMenu',
+  'refactoringActionMenu'
 ];

@@ -26,8 +26,9 @@ export default class AutomateSendAndWait {
 
   getFunctionDescription() {
     return {
-      'name': 'automate-send-and-wait',
-      'parameters': {
+      name: 'automate-send-and-wait',
+      label: 'Automate Send and Wait',
+      parameters: {
         'type': 'object',
         'properties': {
           'sendTaskName': {
@@ -44,7 +45,7 @@ export default class AutomateSendAndWait {
           'intermediateCatchEventName'
         ]
       },
-      'description': `Can perform the following refactoring action: A task with
+      description: `Can perform the following refactoring action: A task with
 the name that indicates sending a message and then waiting for an answer can be
 replaced by a send task that sends the message and an intermediate catch event
 that waits for an answer.`.split('\n').map(line => line.trim()).join(' '),
@@ -90,6 +91,9 @@ that waits for an answer.`.split('\n').map(line => line.trim()).join(' '),
       type: 'bpmn:IntermediateCatchEvent',
       businessObject: intermediateCatchEventBusinessObject,
     });
+
+
+    // ToDo: handle as multi-command
 
     this._modeling.createShape(intermediateCatchEvent, {
       x: element.x + element.width + 80,

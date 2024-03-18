@@ -61,12 +61,14 @@ export default class CommandStackPreview {
   }
 
   handleCommandStackChanged(context) {
+
     // event.stopPropagation();
 
     context.isPreview = true;
   }
 
   handleElementsChanged(context) {
+
     // event.stopPropagation();
 
     context.isPreview = true;
@@ -84,9 +86,7 @@ export default class CommandStackPreview {
 
   handleRender(event, context) {
     context.attrs = {
-      ...context.attrs,
-      fill: 'white',
-      stroke: '#0f62fe'
+      ...context.attrs
     };
   }
 

@@ -30,8 +30,9 @@ export default class ReplaceWithElementOfType {
 
   getFunctionDescription() {
     return {
-      'name': 'replace-with-element-of-type',
-      'parameters': {
+      name: 'replace-with-element-of-type',
+      label: 'Replace with Element of Type',
+      parameters: {
         'type': 'object',
         'properties': {
           'type': {
@@ -47,7 +48,7 @@ export default class ReplaceWithElementOfType {
           'type'
         ]
       },
-      'description': `Can perform the following refactoring action: If an
+      description: `Can perform the following refactoring action: If an
 element's name indicates a completely different element type, it can be
 replaced. Replacing only makes sense if the element has a name and the
 replacement would be of a different element type. Replacing a user task with a

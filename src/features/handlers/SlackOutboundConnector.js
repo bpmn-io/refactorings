@@ -16,13 +16,14 @@ export default class SlackOutboundConnector {
 
   getFunctionDescription() {
     return {
-      'name': 'slack-outbound-connector',
-      'parameters': {
+      name: 'slack-outbound-connector',
+      label: 'Slack Outbound Connector',
+      parameters: {
         'type': 'object',
         'properties': {},
         'required': []
       },
-      'description': `Can perform the following refactoring action: A Slack
+      description: `Can perform the following refactoring action: A Slack
 outbound connector that can be applied to an element with a name similar to
 "Send Slack notification.`.split('\n').map(line => line.trim()).join(' '),
     };
