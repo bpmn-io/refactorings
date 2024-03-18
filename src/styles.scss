@@ -9,6 +9,8 @@
 @import '@carbon/colors';
 @import '@carbon/styles/scss/utilities/box-shadow';
 
+@import '@carbon/styles/scss/components/inline-loading';
+
 * {
   box-sizing: border-box;
 }
@@ -97,17 +99,33 @@ body {
   .group {
     padding: 5px;
 
-    &[data-group="suggest-refactoring"] {
+    &[data-group="suggest-refactoring"].active {
       background-color: #0f62fe;
+
+      .entry.suggest-refactoring {
+        background-color: #0f62fe;
+        color: white;
+      
+        &:hover {
+          background-color: #0050e6;
+        }
+      }
     }
   }
+}
 
-  .entry.suggest-refactoring {
-    background-color: #0f62fe;
-    color: white;
-  
-    &:hover {
-      background-color: #0050e6;
-    }
+.suggest-refactoring {
+  --cds-interactive: white;
+  .cds--loading {
+    line-height: 1em;
+  }
+
+  .cds--loading--small {
+    block-size: 1em;
+    inline-size: 1em;
+  }
+
+  .no-refactorings-available {
+    cursor: not-allowed;
   }
 }
