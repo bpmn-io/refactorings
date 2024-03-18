@@ -89,9 +89,7 @@ function RefactoringActionItem(props) {
     const load = async () => {
       const suggestedRefactoring = await refactoringActionsEntryProvider.fetchRefactoringActions(element);
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      if (suggestedRefactoring) {
+      if (suggestedRefactoring[0]) {
         setLoadingState('LOADED');
         setClass('active');
       } else {
