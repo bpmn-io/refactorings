@@ -99,7 +99,7 @@ body {
   .group {
     padding: 5px;
 
-    &[data-group="suggest-refactoring"].active {
+    &[data-group="suggest-refactoring"]:has(#RefactoringActionPlaceholder.active) {
       background-color: #0f62fe;
 
       .entry {
@@ -112,7 +112,7 @@ body {
       }
     }
 
-    &[data-group="suggest-refactoring"].empty {
+    &[data-group="suggest-refactoring"]:has(#RefactoringActionPlaceholder.empty) {
       background-color: #c6c6c6;
 
       .entry {

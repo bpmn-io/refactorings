@@ -52,12 +52,11 @@ export default class CustomContextPadProvider {
   // In the future, we want the context pad to support Preact components natively
   _renderEntry({ current }) {
     const placeHolder = domQuery('#RefactoringActionPlaceholder', current.pad.html);
-    const group = domQuery('.group[data-group="suggest-refactoring"]', current.pad.html);
 
     if (placeHolder) {
       render(html`<${RefactoringActionItem}
         element=${current.target}
-        setClass=${(name) => { group.classList.toggle(name);}}
+        setClass=${(name) => placeHolder.classList.toggle(name) }
         refactoringActionsEntryProvider=${this._refactoringActionsEntryProvider}
         openPopupMenu=${() => this._openPopupMenu(current.pad.html, current.target)}
       />`, placeHolder
