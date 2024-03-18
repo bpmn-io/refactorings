@@ -132,7 +132,7 @@ function RefactoringIcon(props) {
 </svg></div>`;
 }
 
-function LoadingIcon(props) {
+function LoadingIcon() {
   return html`
   <div class="cds--layout">
 <div class="cds--loading cds--loading--small">
@@ -142,10 +142,4 @@ function LoadingIcon(props) {
 </svg>
 </div>
 </div>`;
-}
-
-function EmptyIcon(props) {
-  return html`
-      <svg xmlns="http://www.w3.org/2000/svg" class="no-refactorings-available" viewBox="0 0 32 32" fill="white"><defs><style>.cls-1{fill:none;}</style></defs><title>No Refactorings Available</title><g id="Icon-2" data-name="Icon"><path d="M2,16H2A14,14,0,1,0,16,2,14,14,0,0,0,2,16Zm23.15,7.75L8.25,6.85a12,12,0,0,1,16.9,16.9ZM8.24,25.16A12,12,0,0,1,6.84,8.27L23.73,25.16a12,12,0,0,1-15.49,0Z" transform="translate(0)"/></g><g id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;"><rect class="cls-1" width="32" height="32"/></g></svg>
-`;
 }
