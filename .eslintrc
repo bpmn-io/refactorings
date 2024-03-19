@@ -1,29 +1,13 @@
 {
   "extends": [
-    "plugin:bpmn-io/browser",
-    "plugin:bpmn-io/jsx"
+    "plugin:bpmn-io/browser"
   ],
   "parserOptions": {
-    "ecmaVersion": "latest"
-  },
-  "globals": {
-    "process": "readonly"
-  },
-  "rules": {
-    "react/jsx-uses-react": "error",
-    "react/react-in-jsx-scope": "error"
-  },
-  "plugins": [
-    "import"
-  ],
-  "settings": {
-    "react": {
-      "version": "17.0"
-    }
+    "ecmaVersion": 2023
   },
   "overrides": [
     {
-      "files": [ "karma.config.js", "webpack.config.js" ],
+      "files": [ "karma.config.cjs" ],
       "extends": "plugin:bpmn-io/node"
     }
   ]

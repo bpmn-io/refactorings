@@ -5,12 +5,6 @@ export type FunctionDescription = {
   description: Object;
 };
 
-export type Preview = {
-  ok: () => void;
-  cancel: () => void;
-  elements: Element[];
-};
-
 export type Refactoring = {
   name: string;
   arguments: any[];
@@ -18,6 +12,6 @@ export type Refactoring = {
 
 export default interface Handler {
   getFunctionDescription(): FunctionDescription;
-  preview(element: Element, refactoring: Refactoring): Preview;
-  validate(element: Element, refactoring: Refactoring) : boolean;
+  execute(element: Element, refactoring: Refactoring): void;
+  validate(element: Element, refactoring: Refactoring): boolean;
 }

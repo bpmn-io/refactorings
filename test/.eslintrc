@@ -1,0 +1,14 @@
+{
+  "extends": "plugin:bpmn-io/mocha",
+  "globals": {
+    "sinon": true
+  },
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "plugins": [
+        "@babel/plugin-syntax-import-attributes"
+      ]
+    }
+  }
+}

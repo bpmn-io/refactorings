@@ -1,8 +1,6 @@
-# BPMN AI Refactorings
+# Refactorings 👷
 
-This is a prototype for a BPMN editor that uses AI to suggest [refactorings](src/features/handlers/).
-
-![Example](docs/example.gif)
+Refactorings for bpmn-js, powered by AI!
 
 ## Setup
 
