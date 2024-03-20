@@ -36,7 +36,7 @@ module.exports = function(karma) {
     ],
 
     preprocessors: {
-      [ suite ]: [ 'webpack', 'env' ]
+      [ suite ]: [ 'webpack' ]
     },
 
     reporters: [ 'progress' ],
@@ -59,18 +59,10 @@ module.exports = function(karma) {
             use: [ 'style-loader', 'css-loader', 'sass-loader' ],
           },
           {
-            test: /\.m?js$/,
+            test: /\.js$/,
             exclude: /node_modules/,
             use: {
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  '@babel/preset-env'
-                ],
-                plugins: [
-                  '@babel/plugin-syntax-import-attributes'
-                ]
-              }
+              loader: 'babel-loader'
             }
           }
         ]

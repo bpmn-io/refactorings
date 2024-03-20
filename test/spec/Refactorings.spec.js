@@ -21,7 +21,7 @@ import { CreateAppendAnythingModule } from 'bpmn-js-create-append-anything';
 
 import ZeebeBehaviorsModule from 'camunda-bpmn-js-behaviors/lib/camunda-cloud/index.js';
 
-import ZeebeModdle from 'zeebe-bpmn-moddle/resources/zeebe.json' with { type: "json" };
+import ZeebeModdle from 'zeebe-bpmn-moddle/resources/zeebe.json';
 
 import {
   CloudElementTemplatesPropertiesProviderModule
@@ -33,13 +33,11 @@ import ElementTemplateIconRenderer from '@bpmn-io/element-template-icon-renderer
 
 import Refactorings from 'lib/index.js';
 
-import SlackOutboundTemplate from '../../lib/refactorings/templates/slack-outbound.json' with { type: "json" };
-
-const elementTemplates = [
-  SlackOutboundTemplate
-];
+import elementTemplates from '../fixtures/element-templates/all.json';
 
 import OpenAI from 'openai';
+
+import diagramXml from 'test/fixtures/bpmn/simple.bpmn';
 
 const openAIApiKey = process.env.OPENAI_API_KEY;
 
@@ -135,12 +133,8 @@ describe('<Example>', function() {
   (singleStart ? it.only : it)('should render', async function() {
 
     // given
-    const { default: diagramXml } = await import('test/fixtures/simple.bpmn');
-
     // when
-    const result = await createModeler(
-      diagramXml
-    );
+    const result = await createModeler(diagramXml);
 
     // then
     expect(result.error).not.to.exist;
