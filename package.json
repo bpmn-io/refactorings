@@ -35,18 +35,19 @@
     "start": "cross-env SINGLE_START=true npm run dev",
     "build": "rollup -c --bundleConfigAsCjs",
     "build:watch": "rollup -cw",
-    "prepare": "run-s build"
+    "fetch-templates": "node ./scripts/fetch-templates.js",
+    "prepare": "run-s fetch-templates build"
   },
   "dependencies": {
     "@bpmn-io/diagram-js-ui": "^0.2.3",
     "@carbon/styles": "^1.53.1",
     "bpmn-js": "^17.0.2",
     "bpmn-js-element-templates": "^1.14.1",
+    "min-dash": "^4.2.1",
     "min-dom": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
-    "@babel/plugin-syntax-import-attributes": "^7.24.1",
     "@babel/preset-env": "^7.18.10",
     "@bpmn-io/element-template-chooser": "^1.0.0",
     "@bpmn-io/element-template-icon-renderer": "0.5.1",
@@ -67,6 +68,7 @@
     "eslint-plugin-bpmn-io": "^1.0.0",
     "eslint-plugin-import": "^2.27.5",
     "file-drops": "^0.5.0",
+    "git": "^0.1.5",
     "html-webpack-plugin": "^5.5.1",
     "karma": "^6.4.2",
     "karma-chrome-launcher": "^3.2.0",
