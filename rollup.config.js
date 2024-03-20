@@ -1,26 +1,36 @@
 /* eslint-env node */
-const commonjs = require('@rollup/plugin-commonjs');
-const json = require('@rollup/plugin-json');
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import pkg from './package.json';
+import postcss from 'rollup-plugin-postcss';
+import path from 'path';
 
-const pkg = require('./package.json');
 const nonbundledDependencies = Object.keys({ ...pkg.dependencies });
 
-const nodeResolve = require('@rollup/plugin-node-resolve');
-
-module.exports = {
+export default {
   input: 'lib/index.js',
   output: [ {
     file: 'dist/index.cjs.js',
-    format: 'cjs'
+    format: 'cjs',
+    sourcemap: true
   },
   {
     file: 'dist/index.esm.js',
-    format: 'esm'
+    format: 'esm',
+    sourcemap: true
   } ],
   plugins: [
     commonjs(),
     json(),
-    nodeResolve()
+    nodeResolve(),
+    postcss({
+      use: [ [
+        'sass', {
+          includePaths: [ path.resolve('node_modules') ]
+        }
+      ] ]
+    })
   ],
   external: nonbundledDependencies
 };

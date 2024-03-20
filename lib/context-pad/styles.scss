@@ -1,0 +1,42 @@
+@use '@carbon/styles/scss/components/inline-loading';
+
+.djs-context-pad {
+  .group {
+    &[data-group="suggest-refactoring"]:has(#RefactoringActionPlaceholder.active) {
+      background-color: #0f62fe;
+
+      .entry {
+        background-color: #0f62fe;
+        color: white;
+      
+        &:hover {
+          background: #0050e6 !important;
+        }
+      }
+    }
+
+    &[data-group="suggest-refactoring"]:has(#RefactoringActionPlaceholder.empty) {
+      background-color: #c6c6c6;
+
+      .entry {
+        background: #c6c6c6 !important;
+        color: #8d8d8d;
+      }
+    }
+  }
+}
+
+.suggest-refactoring {
+  .cds--loading {
+    line-height: 1em;
+  }
+
+  .cds--loading--small {
+    block-size: 1em;
+    inline-size: 1em;
+  }
+
+  .no-refactorings-available {
+    cursor: not-allowed;
+  }
+}

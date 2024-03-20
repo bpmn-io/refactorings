@@ -55,6 +55,10 @@ module.exports = function(karma) {
             use: 'raw-loader'
           },
           {
+            test: /\.s[ac]ss$/i,
+            use: [ 'style-loader', 'css-loader', 'sass-loader' ],
+          },
+          {
             test: /\.m?js$/,
             exclude: /node_modules/,
             use: {
