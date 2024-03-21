@@ -8,23 +8,25 @@ import {
   waitFor
 } from '@testing-library/preact';
 
-import { BpmnImprovedCanvasModule } from '@camunda/improved-canvas';
-
-import diagramXML from '../../fixtures/bpmn/simple.bpmn';
-import RefactoringsContextPadProvider from '../../../lib/context-pad/';
-import MockPopupMenuProvider from './MockPopupMenuProvider';
 import {
   query as domQuery,
-  queryAll as domQueryAll
 } from 'min-dom';
 
-describe.only('Context Pad', function() {
+import { BpmnImprovedCanvasModule } from '@camunda/improved-canvas';
+
+import RefactoringsContextPadModule from '../../../lib/context-pad/';
+import MockPopupMenuModule from './MockPopupMenuProvider';
+
+import diagramXML from '../../fixtures/bpmn/simple.bpmn';
+
+
+describe('Context Pad', function() {
 
   beforeEach(bootstrapModeler(diagramXML, {
     additionalModules: [
       BpmnImprovedCanvasModule,
-      RefactoringsContextPadProvider,
-      MockPopupMenuProvider
+      RefactoringsContextPadModule,
+      MockPopupMenuModule
     ]
   }));
 
