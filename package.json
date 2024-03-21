@@ -29,7 +29,7 @@
   ],
   "scripts": {
     "all": "run-s lint test build",
-    "test": "karma start karma.config.cjs",
+    "test": "karma start karma.config.js",
     "lint": "eslint .",
     "dev": "npm test -- --auto-watch --no-single-run",
     "start": "cross-env SINGLE_START=true npm run dev",
