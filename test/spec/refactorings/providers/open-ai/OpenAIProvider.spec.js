@@ -3,7 +3,7 @@ import {
   inject
 } from 'test/TestHelper';
 
-import { ElementTemplatesCoreModule } from 'bpmn-js-element-templates';
+import { CloudElementTemplatesCoreModule } from 'bpmn-js-element-templates';
 
 import Refactorings from '../../../../../lib/refactorings/Refactorings';
 
@@ -13,11 +13,15 @@ import createElementTemplateHandlerClass from '../../../../../lib/refactorings/p
 
 import diagramXML from '../../../../fixtures/bpmn/simple.bpmn';
 
+import elementTemplateHandlerDescriptions from '../../../../../lib/refactorings/providers/open-ai/handlers/elementTemplateHandlerDescriptions.json';
+
+import elementTemplates from '../../../../fixtures/element-templates/all.json';
+
 describe('OpenAIProvider', function() {
 
   beforeEach(bootstrapModeler(diagramXML, {
     additionalModules: [
-      ElementTemplatesCoreModule,
+      CloudElementTemplatesCoreModule,
       {
         __init__: [
           'refactorings',
@@ -34,14 +38,17 @@ describe('OpenAIProvider', function() {
         }
       }
     },
-    elementTemplates: [
-      {
-        id: 'foobar',
-        name: 'Foobar',
-        appliesTo: [ 'bpmn:Task' ],
-        properties: []
-      }
-    ]
+    elementTemplates
+  }));
+
+
+  it('should have handler for each element template', inject(function(openAIProvider) {
+
+    // when
+    const handlers = openAIProvider._handlers;
+
+    // then
+    expect(handlers).to.have.length(Object.keys(elementTemplateHandlerDescriptions).length);
   }));
 
 
@@ -153,6 +160,40 @@ describe('OpenAIProvider', function() {
 
         // given
         const Handler = createElementTemplateHandlerClass('barbaz', 'Barbaz');
+
+        const handler = injector.instantiate(Handler);
+
+        const element = elementRegistry.get('Task_1');
+
+        // when
+        const canExecute = handler.canExecute(element);
+
+        // then
+        expect(canExecute).to.be.false;
+      }));
+
+
+      it('should not be able to execute if element template deprecated', inject(function(elementRegistry, injector) {
+
+        // given
+        const Handler = createElementTemplateHandlerClass('foobar-deprecated', 'Foobar Deprecated');
+
+        const handler = injector.instantiate(Handler);
+
+        const element = elementRegistry.get('Task_1');
+
+        // when
+        const canExecute = handler.canExecute(element);
+
+        // then
+        expect(canExecute).to.be.false;
+      }));
+
+
+      it('should not be able to execute if description not filled', inject(function(elementRegistry, injector) {
+
+        // given
+        const Handler = createElementTemplateHandlerClass('foobar', '[AUTO-FILLED FROM TEMPLATE DESCRIPTION]');
 
         const handler = injector.instantiate(Handler);
 

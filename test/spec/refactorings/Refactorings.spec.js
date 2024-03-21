@@ -3,7 +3,7 @@ import {
   inject
 } from 'test/TestHelper';
 
-import { ElementTemplatesCoreModule } from 'bpmn-js-element-templates';
+import { CloudElementTemplatesCoreModule } from 'bpmn-js-element-templates';
 
 import RefactoringsModule from '../../../lib/refactorings';
 import Refactorings from '../../../lib/refactorings/Refactorings';
@@ -20,7 +20,7 @@ describe('Refactorings', function() {
 
     beforeEach(bootstrapModeler(diagramXML, {
       additionalModules: [
-        ElementTemplatesCoreModule,
+        CloudElementTemplatesCoreModule,
         RefactoringsModule
       ]
     }));

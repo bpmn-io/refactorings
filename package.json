@@ -35,8 +35,10 @@
     "start": "cross-env SINGLE_START=true npm run dev",
     "build": "rollup -c --bundleConfigAsCjs",
     "build:watch": "rollup -cw",
-    "fetch-templates": "node ./scripts/fetch-templates.js",
-    "prepare": "run-s fetch-templates build"
+    "create-element-template-handler-descriptions": "node ./scripts/create-element-template-handler-descriptions.js",
+    "create-element-template-handler-descriptions:openai": "cross-env USE_OPENAI=true node ./scripts/create-element-template-handler-descriptions.js",
+    "fetch-element-templates": "node ./scripts/fetch-element-templates.js",
+    "prepare": "run-s build"
   },
   "dependencies": {
     "@bpmn-io/diagram-js-ui": "^0.2.3",
@@ -63,6 +65,7 @@
     "camunda-bpmn-js-behaviors": "^1.3.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
+    "dotenv": "^16.4.5",
     "dotenv-webpack": "^8.0.1",
     "downloadjs": "^1.4.7",
     "eslint": "^8.40.0",

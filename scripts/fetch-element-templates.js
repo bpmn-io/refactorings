@@ -41,12 +41,12 @@ function deleteDirectory(directory) {
   });
 }
 
-const createTemplatesBundle = async (directory) => {
+const createElementTemplatesBundle = async (directory) => {
   try {
-    const templatesBundle = path.join(directory, 'all.json');
+    const elementTemplatesBundle = path.join(directory, 'all.json');
 
-    if (fs.existsSync(templatesBundle)) {
-      fs.unlinkSync(templatesBundle);
+    if (fs.existsSync(elementTemplatesBundle)) {
+      fs.unlinkSync(elementTemplatesBundle);
     }
 
     const files = fs.readdirSync(directory);
@@ -72,21 +72,21 @@ const createTemplatesBundle = async (directory) => {
 
     }
 
-    console.log('Templates bundle created');
+    console.log('Element templates bundle created');
   } catch (error) {
-    console.error('Error creating templates bundle:', error);
+    console.error('Error creating element templates bundle:', error);
   }
 };
 
-const repoUrl = 'https://github.com/camunda/web-modeler.git';
-const destination = 'tmp';
+const repositoryUrl = 'https://github.com/camunda/web-modeler.git';
+const temporaryDirectory = 'tmp';
 const sourceDirectory = 'webapp/src/App/Pages/Diagram/BpmnJSExtensions/connectorsExtension/.camunda/element-templates';
 const targetDirectory = 'test/fixtures/element-templates';
 
-cloneRepository(repoUrl, destination);
+cloneRepository(repositoryUrl, temporaryDirectory);
 
-copyFiles(path.join(destination, sourceDirectory), targetDirectory);
+copyFiles(path.join(temporaryDirectory, sourceDirectory), targetDirectory);
 
-deleteDirectory(destination);
+deleteDirectory(temporaryDirectory);
 
-createTemplatesBundle(targetDirectory);
+createElementTemplatesBundle(targetDirectory);

@@ -4,7 +4,7 @@ import {
   inject
 } from 'test/TestHelper';
 
-import { ElementTemplatesCoreModule } from 'bpmn-js-element-templates';
+import { CloudElementTemplatesCoreModule } from 'bpmn-js-element-templates';
 
 import OpenAI from 'openai';
 
@@ -27,7 +27,7 @@ describe('OpenAIClient', function() {
 
   beforeEach(bootstrapModeler(diagramXML, {
     additionalModules: [
-      ElementTemplatesCoreModule
+      CloudElementTemplatesCoreModule
     ]
   }));
 
