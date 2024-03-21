@@ -9,6 +9,8 @@ import Refactorings from '../../../../../lib/refactorings/Refactorings';
 
 import OpenAIProvider from '../../../../../lib/refactorings/providers/open-ai/OpenAIProvider';
 
+import createElementTemplateHandlerClass from '../../../../../lib/refactorings/providers/open-ai/handlers/createElementTemplateHandlerClass';
+
 import diagramXML from '../../../../fixtures/bpmn/simple.bpmn';
 
 describe('OpenAIProvider', function() {
@@ -31,7 +33,15 @@ describe('OpenAIProvider', function() {
           create: () => {}
         }
       }
-    }
+    },
+    elementTemplates: [
+      {
+        id: 'foobar',
+        name: 'Foobar',
+        appliesTo: [ 'bpmn:Task' ],
+        properties: []
+      }
+    ]
   }));
 
 
@@ -86,5 +96,77 @@ describe('OpenAIProvider', function() {
     expect(refactoring).to.have.length(0);
     expect(fake).to.not.have.been.called;
   }));
+
+
+  describe('handlers', function() {
+
+    describe('ElementTemplateHandler', function() {
+
+      it('should create ElementTemplateHandler class', inject(function(injector) {
+
+        // given
+        // when
+        const Handler = createElementTemplateHandlerClass('foobar', 'Foobar');
+
+        const handler = injector.instantiate(Handler);
+
+        // then
+        expect(handler).to.exist;
+      }));
+
+
+      it('should be able to execute if appliesTo matching', inject(function(elementRegistry, injector) {
+
+        // given
+        const Handler = createElementTemplateHandlerClass('foobar', 'Foobar');
+
+        const handler = injector.instantiate(Handler);
+
+        const element = elementRegistry.get('Task_1');
+
+        // when
+        const canExecute = handler.canExecute(element);
+
+        // then
+        expect(canExecute).to.be.true;
+      }));
+
+
+      it('should not be able to execute if appliesTo not matching', inject(function(elementRegistry, injector) {
+
+        // given
+        const Handler = createElementTemplateHandlerClass('foobar', 'Foobar');
+
+        const handler = injector.instantiate(Handler);
+
+        const element = elementRegistry.get('StartEvent_1');
+
+        // when
+        const canExecute = handler.canExecute(element);
+
+        // then
+        expect(canExecute).to.be.false;
+      }));
+
+
+      it('should not be able to execute if element template not found', inject(function(elementRegistry, injector) {
+
+        // given
+        const Handler = createElementTemplateHandlerClass('barbaz', 'Barbaz');
+
+        const handler = injector.instantiate(Handler);
+
+        const element = elementRegistry.get('Task_1');
+
+        // when
+        const canExecute = handler.canExecute(element);
+
+        // then
+        expect(canExecute).to.be.false;
+      }));
+
+    });
+
+  });
 
 });
