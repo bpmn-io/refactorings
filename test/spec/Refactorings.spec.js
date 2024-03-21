@@ -105,9 +105,7 @@ describe('<Example>', function() {
         description: ZeebeTooltipProvider,
         layout
       },
-      refactorings: {
-        openai
-      },
+      openai,
       elementTemplates,
       ...options
     });
