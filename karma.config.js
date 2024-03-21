@@ -36,7 +36,7 @@ module.exports = function(karma) {
     ],
 
     preprocessors: {
-      [ suite ]: [ 'webpack', 'env' ],
+      [ suite ]: [ 'webpack', 'env' ]
     },
 
     reporters: [ 'progress' ],
