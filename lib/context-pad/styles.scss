@@ -1,6 +1,9 @@
 @use '@carbon/styles/scss/components/inline-loading';
 
-#RefactoringActionPlaceholder.empty {
+#RefactoringActionPlaceholder.empty .no-refactorings-available {
+  &:hover {
+    background-color: white;
+  }
     color: #8d8d8d;
 }
 
@@ -12,9 +15,5 @@
   .cds--loading--small {
     block-size: 1em;
     inline-size: 1em;
-  }
-
-  .no-refactorings-available {
-    cursor: not-allowed;
   }
 }
