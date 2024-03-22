@@ -1,4 +1,4 @@
-# Refactorings 👷
+# @bpmn-io/refactorings 👷
 
 Refactorings for bpmn-js, powered by AI!
 
@@ -10,7 +10,7 @@ npm install
 npm start
 ```
 
-Updating element template hander descriptions:
+Update the [tool descriptions](https://platform.openai.com/docs/api-reference/assistants/createAssistant#assistants-createassistant-tools) used for refactorings powered by OpenAI:
 
 ```bash
 # fetch latest element templates from camunda/web-modeler repository
