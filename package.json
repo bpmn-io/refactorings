@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/bpmn-io/refactorings#readme",
   "license": "MIT",
+  "main": "./dist/index.cjs.js",
   "exports": {
     ".": {
       "import": "./dist/index.esm.js",
