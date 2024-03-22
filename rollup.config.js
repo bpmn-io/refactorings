@@ -6,7 +6,10 @@ import pkg from './package.json';
 import postcss from 'rollup-plugin-postcss';
 import path from 'path';
 
-const nonbundledDependencies = Object.keys({ ...pkg.dependencies });
+const nonbundledDependencies = Object.keys({
+  ...pkg.dependencies,
+  ...pkg.peerDependencies,
+}).map(dependency => new RegExp(`^${dependency}($|/)`));
 
 export default {
   input: 'lib/index.js',
