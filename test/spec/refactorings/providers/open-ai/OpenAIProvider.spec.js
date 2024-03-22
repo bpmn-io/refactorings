@@ -107,6 +107,7 @@ describe('OpenAIProvider', function() {
     // then
     expect(refactoring).to.have.length(1);
     expect(refactoring[0].id).to.equal('template_Slack_v1');
+    expect(refactoring[0].label).to.equal('Apply Slack Outbound Connector template');
     expect(openai.createChatCompletion).to.have.been.called;
   }));
 
