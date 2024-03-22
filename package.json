@@ -28,10 +28,12 @@
     "dist"
   ],
   "scripts": {
-    "all": "run-s lint test build",
+    "all": "run-s lint test:openai build",
     "test": "karma start karma.config.js",
+    "test:openai": "cross-env TEST_OPENAI=true karma start karma.config.js",
     "lint": "eslint .",
     "dev": "npm test -- --auto-watch --no-single-run",
+    "dev:openai": "cross-env TEST_OPENAI=true npm test -- --auto-watch --no-single-run",
     "start": "cross-env SINGLE_START=true npm run dev",
     "build": "rollup -c --bundleConfigAsCjs",
     "build:watch": "rollup -cw",
