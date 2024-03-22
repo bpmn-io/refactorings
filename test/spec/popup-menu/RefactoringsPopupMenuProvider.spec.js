@@ -7,7 +7,7 @@ import {
   queryAll as domQueryAll,
 } from 'min-dom';
 
-import { ElementTemplatesCoreModule } from 'bpmn-js-element-templates';
+import { CloudElementTemplatesCoreModule } from 'bpmn-js-element-templates';
 
 import RefactoringsModule from '../../../lib/refactorings';
 import RefactoringsPopupMenuModule from '../../../lib/popup-menu/';
@@ -18,7 +18,7 @@ describe('Popup Menu', function() {
 
   beforeEach(bootstrapModeler(diagramXML, {
     additionalModules: [
-      ElementTemplatesCoreModule,
+      CloudElementTemplatesCoreModule,
       RefactoringsPopupMenuModule,
       RefactoringsModule
     ]
