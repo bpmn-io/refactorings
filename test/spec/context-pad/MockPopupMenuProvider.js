@@ -3,19 +3,8 @@
    * An entry provider for the popup menu that shows available refactorings.
    */
 export class MockPopupMenuProvider {
-  constructor() {
-    this.resolve = () => {};
-    this.promise = null;
-    this.result = null;
-  }
+  fetchRefactoringActions() { }
 
-  fetchRefactoringActions() {
-    return this.result;
-  }
-
-  setResult(result) {
-    this.result = result;
-  }
 }
 
 MockPopupMenuProvider.$inject = [];
