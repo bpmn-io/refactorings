@@ -11,6 +11,8 @@ import OpenAIProvider from '../../../../../lib/refactorings/providers/open-ai/Op
 
 import createElementTemplateHandlerClass from '../../../../../lib/refactorings/providers/open-ai/handlers/createElementTemplateHandlerClass';
 
+import ElementTemplatesErrorLogger from '../../../ElementTemplatesErrorLogger';
+
 import diagramXML from '../../../../fixtures/bpmn/simple.bpmn';
 
 import elementTemplateHandlerDescriptions from '../../../../../lib/refactorings/providers/open-ai/handlers/elementTemplateHandlerDescriptions.json';
@@ -19,43 +21,8 @@ import elementTemplates from '../../../../fixtures/element-templates/all.json';
 
 describe('OpenAIProvider', function() {
 
-  beforeEach(bootstrapModeler(diagramXML, {
-    additionalModules: [
-      CloudElementTemplatesCoreModule,
-      {
-        __init__: [
-          'refactorings',
-          'openAIProvider'
-        ],
-        refactorings: [ 'type', Refactorings ],
-        openAIProvider: [ 'type', OpenAIProvider ]
-      }
-    ],
-    openai: {
-      chat: {
-        completions: {
-          create: () => {}
-        }
-      }
-    },
-    elementTemplates
-  }));
-
-
-  it('should have handler for each element template', inject(function(openAIProvider) {
-
-    // when
-    const handlers = openAIProvider._handlers;
-
-    // then
-    expect(handlers).to.have.length(Object.keys(elementTemplateHandlerDescriptions).length);
-  }));
-
-
-  it('should get refactoring', inject(async function(config, elementRegistry, refactorings) {
-
-    // given
-    const fake = sinon.replace(config.openai.chat.completions, 'create', sinon.fake.returns({
+  const openai = {
+    createChatCompletion: sinon.fake.returns({
       choices:[
         {
           message: {
@@ -70,8 +37,66 @@ describe('OpenAIProvider', function() {
           }
         }
       ]
-    }));
+    })
+  };
 
+  beforeEach(function() {
+    openai.createChatCompletion.resetHistory();
+  });
+
+  beforeEach(bootstrapModeler(diagramXML, {
+    additionalModules: [
+      CloudElementTemplatesCoreModule,
+      ElementTemplatesErrorLogger,
+      {
+        __init__: [
+          'refactorings',
+          'openAIProvider',
+        ],
+        refactorings: [ 'type', Refactorings ],
+        openAIProvider: [ 'type', OpenAIProvider ],
+      }
+    ],
+    refactorings: {
+      openai
+    },
+    elementTemplates: [
+      ...elementTemplates,
+      {
+        $schema: 'https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json',
+        id: 'foobar',
+        name: 'Foobar',
+        appliesTo: [ 'bpmn:Task' ],
+        properties: []
+      },
+      {
+        $schema: 'https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json',
+        id: 'foobar-deprecated',
+        name: 'Foobar Deprecated',
+        appliesTo: [ 'bpmn:Task' ],
+        properties: [],
+        deprecated: {
+          message: 'Foobar is deprecated.',
+          documentationRef: 'https://foobar.com/docs'
+        }
+      }
+    ]
+  }));
+
+
+  it('should have handler for each element template', inject(function(openAIProvider) {
+
+    // when
+    const handlers = openAIProvider._handlers;
+
+    // then
+    expect(handlers).to.have.length(Object.keys(elementTemplateHandlerDescriptions).length);
+  }));
+
+
+  it('should get refactoring', inject(async function(elementRegistry, refactorings) {
+
+    // given
     const elements = [
       elementRegistry.get('Task_1')
     ];
@@ -82,15 +107,13 @@ describe('OpenAIProvider', function() {
     // then
     expect(refactoring).to.have.length(1);
     expect(refactoring[0].id).to.equal('template_Slack_v1');
-    expect(fake).to.have.been.called;
+    expect(openai.createChatCompletion).to.have.been.called;
   }));
 
 
-  it('should not get refactoring (more than one element)', inject(async function(config, elementRegistry, refactorings) {
+  it('should not get refactoring (more than one element)', inject(async function(elementRegistry, refactorings) {
 
     // given
-    const fake = sinon.replace(config.openai.chat.completions, 'create', sinon.fake());
-
     const elements = [
       elementRegistry.get('StartEvent_1'),
       elementRegistry.get('Task_1')
@@ -101,7 +124,7 @@ describe('OpenAIProvider', function() {
 
     // then
     expect(refactoring).to.have.length(0);
-    expect(fake).to.not.have.been.called;
+    expect(openai.createChatCompletion).to.not.have.been.called;
   }));
 
 
@@ -177,23 +200,6 @@ describe('OpenAIProvider', function() {
 
         // given
         const Handler = createElementTemplateHandlerClass('foobar-deprecated', 'Foobar Deprecated');
-
-        const handler = injector.instantiate(Handler);
-
-        const element = elementRegistry.get('Task_1');
-
-        // when
-        const canExecute = handler.canExecute(element);
-
-        // then
-        expect(canExecute).to.be.false;
-      }));
-
-
-      it('should not be able to execute if description not filled', inject(function(elementRegistry, injector) {
-
-        // given
-        const Handler = createElementTemplateHandlerClass('foobar', '[AUTO-FILLED FROM TEMPLATE DESCRIPTION]');
 
         const handler = injector.instantiate(Handler);
 

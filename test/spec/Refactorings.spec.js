@@ -105,7 +105,11 @@ describe('<Example>', function() {
         description: ZeebeTooltipProvider,
         layout
       },
-      openai,
+      refactorings: {
+        openai: {
+          createChatCompletion: (...args) => openai.chat.completions.create(...args)
+        }
+      },
       elementTemplates,
       ...options
     });

@@ -12,6 +12,8 @@ import OpenAIClient from '../../../../../lib/refactorings/providers/open-ai/Open
 
 import handlers from '../../../../../lib/refactorings/providers/open-ai/handlers';
 
+import elementTemplates from '../../../../fixtures/element-templates/all.json';
+
 import diagramXML from '../../../../fixtures/bpmn/simple.bpmn';
 
 const openAIApiKey = process.env.OPENAI_API_KEY;
@@ -21,20 +23,25 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
-describe('OpenAIClient', function() {
+const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
+
+(testOpenai ? describe : describe.skip)('OpenAIClient', function() {
 
   this.timeout(10000);
 
   beforeEach(bootstrapModeler(diagramXML, {
     additionalModules: [
       CloudElementTemplatesCoreModule
-    ]
+    ],
+    elementTemplates
   }));
 
   let openAIClient;
 
   beforeEach(function() {
-    openAIClient = new OpenAIClient(openai);
+    openAIClient = new OpenAIClient({
+      createChatCompletion: (...args) => openai.chat.completions.create(...args)
+    });
   });
 
 
@@ -54,7 +61,6 @@ describe('OpenAIClient', function() {
 });
 
 function getTools(element) {
-  console.log(getBpmnJS());
   return handlers
     .map(Handler => getBpmnJS().get('injector').instantiate(Handler))
     .filter(handler => handler.canExecute(element))
