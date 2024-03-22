@@ -65,12 +65,11 @@ const createElementTemplatesBundle = async (directory) => {
       } else {
         jsonArray.push(jsonObjectOrArray);
       }
-
-      const indexFilePath = path.join(directory, 'all.json');
-
-      fs.writeFileSync(indexFilePath, JSON.stringify(jsonArray, null, 2));
-
     }
+
+    const indexFilePath = path.join(directory, 'all.json');
+
+    fs.writeFileSync(indexFilePath, JSON.stringify(jsonArray, null, 2));
 
     console.log('Element templates bundle created');
   } catch (error) {
