@@ -1,0 +1,32 @@
+@use '@carbon/styles/scss/components/inline-loading';
+
+#refactoring-action-placeholder.empty .no-refactorings-available {
+  &:hover {
+    background-color: white;
+  }
+    color: #8d8d8d;
+}
+
+.suggest-refactoring {
+  .cds--loading {
+    line-height: 1em;
+  }
+
+  .cds--loading--small {
+    block-size: 1em;
+    inline-size: 1em;
+  }
+
+  .refactoring-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 6px;
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "plugin:bpmn-io/browser"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2023
+  },
+  "overrides": [
+    {
+      "files": [ "karma.config.cjs" ],
+      "extends": "plugin:bpmn-io/node"
+    }
+  ]
+}
