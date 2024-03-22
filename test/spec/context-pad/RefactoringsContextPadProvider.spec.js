@@ -40,7 +40,7 @@ describe('Context Pad', function() {
     contextPad.open(task);
 
     // then
-    expect(domQuery('#refactoring-action-placeholder')).to.exist;
+    expect(domQuery('.entry.suggest-refactoring')).to.exist;
   }));
 
 
@@ -53,55 +53,34 @@ describe('Context Pad', function() {
     contextPad.open(task);
 
     // then
-    expect(domQuery('#refactoring-action-placeholder .refactoring-icon')).to.exist;
+    expect(domQuery('.entry.suggest-refactoring')).to.exist;
   }));
 
 
-  it('should show loading spinner on click', inject(async function(elementRegistry, contextPad, refactoringsPopupMenuProvider) {
+  it('should pre-fetch results in popup menu provider', inject(function(elementRegistry, contextPad, refactoringsPopupMenuProvider) {
 
     // given
     const task = elementRegistry.get('Task_1');
-
-    refactoringsPopupMenuProvider.setResult(new Promise(() => {}));
-    contextPad.open(task);
-
-    const icon = domQuery('#refactoring-action-placeholder .refactoring-icon');
-
-    // when
-    await act(() => icon.click());
-
-    // then
-    expect(domQuery('.cds--loading')).to.exist;
-  }));
-
-
-  it('should show disabled state when no refactorings are available', inject(async function(elementRegistry, contextPad, refactoringsPopupMenuProvider) {
-
-    // given
-    const task = elementRegistry.get('Task_1');
-
-    refactoringsPopupMenuProvider.setResult([]);
+    refactoringsPopupMenuProvider.fetchRefactoringActions = sinon.spy();
 
     // when
     contextPad.open(task);
 
     // then
-    waitFor(() => {
-      expect(domQuery('.no-refactorings-available')).to.exist;
-    });
+    expect(refactoringsPopupMenuProvider.fetchRefactoringActions).to.have.been.calledWith(task);
+
   }));
 
 
-  it('should open popup menu on click', inject(async function(elementRegistry, contextPad, refactoringsPopupMenuProvider, popupMenu) {
+  it('should open popup menu on click', inject(async function(elementRegistry, contextPad, popupMenu) {
 
     // given
     const task = elementRegistry.get('Task_1');
     popupMenu.open = sinon.spy();
 
-    refactoringsPopupMenuProvider.setResult([ 'some-refactoring' ]);
     contextPad.open(task);
 
-    const icon = domQuery('#refactoring-action-placeholder .refactoring-icon');
+    const icon = domQuery('.entry.suggest-refactoring');
 
     // when
     await act(() => icon.click());
@@ -114,5 +93,3 @@ describe('Context Pad', function() {
   }));
 
 });
-
-
