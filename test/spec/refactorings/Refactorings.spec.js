@@ -78,8 +78,16 @@ describe('Refactorings', function() {
       // then
       expect(_refactorings).to.have.length(3);
       expect(_refactorings[0].id).to.equal('foo');
+      expect(_refactorings[0].label).to.equal('Foo');
+      expect(_refactorings[0].execute).to.exist;
+
       expect(_refactorings[1].id).to.equal('bar');
+      expect(_refactorings[1].label).to.equal('Bar');
+      expect(_refactorings[1].execute).to.exist;
+
       expect(_refactorings[2].id).to.equal('baz');
+      expect(_refactorings[2].label).to.equal('Baz');
+      expect(_refactorings[2].execute).to.exist;
     }));
 
   });
