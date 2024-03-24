@@ -7,7 +7,7 @@
   },
   "overrides": [
     {
-      "files": [ "karma.config.cjs" ],
+      "files": [ "karma.config.cjs", "scripts/*.js" ],
       "extends": "plugin:bpmn-io/node"
     }
   ]
