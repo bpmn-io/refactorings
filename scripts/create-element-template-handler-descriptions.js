@@ -1,8 +1,22 @@
-/* eslint-env node */
+/**
+ * @typedef { {
+ *   [id: string]: {
+ *     appliesTo: string[];
+ *     description: string;
+ *     name: string;
+ *   }
+ * } } TemplateDetails
+ *
+ * @typedef { {
+ *   [id: string]: string;
+ * } } TemplateDescriptions
+ */
 
 const fs = require('fs');
 
 const OpenAI = require('openai');
+
+const { typeToString } = require('./util');
 
 require('dotenv').config();
 
@@ -16,8 +30,13 @@ function getLatestTemplate(templates, id) {
   }, null);
 }
 
-function getTemplateDescription(targetFilePath) {
-  let descriptions = {};
+/**
+ * @param {string} targetFilePath
+ *
+ * @returns {TemplateDetails}
+ */
+function getTemplateDetails(targetFilePath) {
+  let templateDetails = {};
 
   const templates = JSON.parse(fs.readFileSync(targetFilePath));
 
@@ -26,17 +45,30 @@ function getTemplateDescription(targetFilePath) {
 
     const latestTemplate = getLatestTemplate(templates, id);
 
-    if (!descriptions[ latestTemplate.id ]) {
-      const { description = '' } = latestTemplate;
+    if (!templateDetails[ latestTemplate.id ]) {
+      const {
+        appliesTo,
+        description = '',
+        name
+      } = latestTemplate;
 
-      descriptions[ latestTemplate.id ] = description;
+      templateDetails[ latestTemplate.id ] = {
+        appliesTo,
+        description,
+        name
+      };
     }
   });
 
-  return descriptions;
+  return templateDetails;
 }
 
-async function generateToolDescriptions(collectedDescriptions) {
+/**
+ * @param {TemplateDetails} templateDetails
+ *
+ * @returns {Promise<TemplateDescriptions>}
+ */
+async function generateToolDescriptions(templateDetails) {
   const openAIApiKey = process.env.OPENAI_API_KEY;
 
   const openai = new OpenAI({
@@ -46,7 +78,7 @@ async function generateToolDescriptions(collectedDescriptions) {
 
   console.log('Using OpenAI to generate descriptions');
 
-  for (const [ id, description ] of Object.entries(collectedDescriptions)) {
+  for (const [ id, { appliesTo, description, name } ] of Object.entries(templateDetails)) {
     console.log('Using OpenAI to generate description for:', description);
 
     const response = await openai.chat.completions.create({
@@ -57,15 +89,25 @@ async function generateToolDescriptions(collectedDescriptions) {
 prompt engineer. Your BPMN modeler has the concept of connector templates that
 can be used to automatically add properties to an element to connect to a
 service or platform. Your BPMN modeler can suggest the right connector based on
-an element's name. Given the description of a connector template please
-provide a description of a tool that can use the connector template to add the
-required properties. Here are some examples:
+an element's name. Given the name and description of a connector template and
+the possible element types it can be used for, please provide a description of a
+tool that can use the connector template to add the required properties. Here
+are some examples:
 
-Connector template description: "Create a channel or send a message to a channel or user"
-Tool description: "Can apply a Slack connector template to an element with a name similar to Send Slack notification."
+Connector template name: GitHub Webhook Message Start Event Connector
+Connector template description: Receive events from GitHub
+Possible element types: Start Event
+Tool description: Can apply a GitHub Webhook connector template to a start event whose name mentions GitHub or has a name similar to Wait for GitHub webhook.
 
-Connector template description: "Create folder or a file from template"
-Tool description: "Can apply a Google Drive connector template to an element with a name similar to Create Google Drive folder."
+Connector template name: Slack Outbound Connector
+Connector template description: Create a channel or send a message to a channel or user
+Possible element types: Task
+Tool description: Can apply a Slack connector template to a task whose name mentions Slack or has a name similar to Send Slack notification.
+
+Connector template name: Google Drive Outbound Connector
+Connector template description: Create folder or a file from template
+Possible element types: Task
+Tool description: Can apply a Google Drive connector template to a task whose name mentions Google Drive or has a name similar to Create Google Drive folder.
 
 If the connector template description mentions deprectation, simply ignore it as
 it is not relevant to the tool description.
@@ -75,7 +117,9 @@ Respond only with the tool description!`
         },
         {
           'role': 'user',
-          'content': `Connector template description: "${ description }"`
+          'content': `Connector template name: ${ name }
+Connector template description: ${ description }
+Possible element types: ${ appliesTo.map(type => typeToString(type)).join(', ') }`
         }
       ],
       model: 'gpt-4-1106-preview'
@@ -85,10 +129,10 @@ Respond only with the tool description!`
 
     console.log('Generated description:', generatedDescription);
 
-    collectedDescriptions[ id ] = generatedDescription;
+    templateDetails[ id ] = generatedDescription;
   }
 
-  return collectedDescriptions;
+  return templateDetails;
 }
 
 function updateTemplateHandlerDescriptions(targetFilePath, descriptions) {
@@ -96,13 +140,22 @@ function updateTemplateHandlerDescriptions(targetFilePath, descriptions) {
 }
 
 (async function() {
-  let collectedDescriptions = getTemplateDescription('test/fixtures/element-templates/all.json');
+  const templateDetails = getTemplateDetails('test/fixtures/element-templates/all.json');
+
+  let descriptions;
 
   if (process.env.USE_OPENAI) {
-    collectedDescriptions = await generateToolDescriptions(collectedDescriptions);
+    descriptions = await generateToolDescriptions(templateDetails);
+  } else {
+    descriptions = Object.entries(templateDetails).reduce((descriptions, [ id, { description } ]) => {
+      return {
+        ...descriptions,
+        [ id ]: description
+      };
+    }, {});
   }
 
-  updateTemplateHandlerDescriptions('lib/refactorings/providers/open-ai/handlers/elementTemplateHandlerDescriptions.json', collectedDescriptions);
+  updateTemplateHandlerDescriptions('lib/refactorings/providers/open-ai/handlers/elementTemplateHandlerDescriptions.json', descriptions);
 
   console.log('Updated descriptions');
 })();
