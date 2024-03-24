@@ -94,7 +94,7 @@ describe('OpenAIProvider', function() {
   }));
 
 
-  it('should get refactoring', inject(async function(elementRegistry, refactorings) {
+  it('should get refactorings', inject(async function(elementRegistry, refactorings) {
 
     // given
     const elements = [
@@ -102,12 +102,12 @@ describe('OpenAIProvider', function() {
     ];
 
     // when
-    const refactoring = await refactorings.getRefactorings(elements);
+    const _refactorings = await refactorings.getRefactorings(elements);
 
     // then
-    expect(refactoring).to.have.length(1);
-    expect(refactoring[0].id).to.equal('template_Slack_v1');
-    expect(refactoring[0].label).to.equal('Apply Slack Outbound Connector template');
+    expect(_refactorings).to.have.length(1);
+    expect(_refactorings[0].id).to.equal('template_Slack_v1');
+    expect(_refactorings[0].label).to.equal('Apply Slack Outbound Connector template');
     expect(openai.createChatCompletion).to.have.been.called;
   }));
 
@@ -121,12 +121,125 @@ describe('OpenAIProvider', function() {
     ];
 
     // when
-    const refactoring = await refactorings.getRefactorings(elements);
+    const _refactorings = await refactorings.getRefactorings(elements);
 
     // then
-    expect(refactoring).to.have.length(0);
+    expect(_refactorings).to.have.length(0);
     expect(openai.createChatCompletion).to.not.have.been.called;
   }));
+
+
+  describe('caching', function() {
+
+    it('should return cached', inject(async function(elementRegistry, refactorings) {
+
+      // given
+      const elements = [
+        elementRegistry.get('Task_1')
+      ];
+
+      const refactorings1 = await refactorings.getRefactorings(elements);
+
+      expect(refactorings1).to.have.length(1);
+      expect(openai.createChatCompletion).to.have.been.called;
+
+      openai.createChatCompletion.resetHistory();
+
+      // when
+      const refactorings2 = await refactorings.getRefactorings(elements);
+
+      // then
+      expect(refactorings2).to.have.length(1);
+      expect(refactorings2).to.eql(refactorings1);
+      expect(openai.createChatCompletion).not.to.have.been.called;
+    }));
+
+
+    it('should update ID of cached on element ID change', inject(async function(elementRegistry, modeling, refactorings) {
+
+      // given
+      const elements = [
+        elementRegistry.get('Task_1')
+      ];
+
+      const refactorings1 = await refactorings.getRefactorings(elements);
+
+      expect(refactorings1).to.have.length(1);
+      expect(openai.createChatCompletion).to.have.been.called;
+
+      openai.createChatCompletion.resetHistory();
+
+      // when
+      modeling.updateProperties(elements[0], { id: 'Task_2' });
+
+      const refactorings2 = await refactorings.getRefactorings(elements);
+
+      // then
+      expect(refactorings2).to.have.length(1);
+      expect(refactorings2).to.eql(refactorings1);
+      expect(openai.createChatCompletion).not.to.have.been.called;
+    }));
+
+
+    it('shoud delete cached on element name change', inject(async function(elementRegistry, modeling, refactorings) {
+
+      // given
+      const elements = [
+        elementRegistry.get('Task_1')
+      ];
+
+      const refactorings1 = await refactorings.getRefactorings(elements);
+
+      expect(refactorings1).to.have.length(1);
+      expect(openai.createChatCompletion).to.have.been.called;
+
+      openai.createChatCompletion.resetHistory();
+
+      // when
+      modeling.updateProperties(elements[0], { name: 'Send Slack notification to John' });
+
+      const refactorings2 = await refactorings.getRefactorings(elements);
+
+      // then
+      expect(refactorings2).to.have.length(1);
+      expect(openai.createChatCompletion).to.have.been.called;
+    }));
+
+
+    it('should delete cached on element removed', inject(async function(
+        bpmnFactory, canvas, elementRegistry, modeling, refactorings) {
+
+      // given
+      const elements = [
+        elementRegistry.get('Task_1')
+      ];
+
+      const refactorings1 = await refactorings.getRefactorings(elements);
+
+      expect(refactorings1).to.have.length(1);
+      expect(openai.createChatCompletion).to.have.been.called;
+
+      openai.createChatCompletion.resetHistory();
+
+      // when
+      modeling.removeShape(elements[0]);
+
+      modeling.createShape({
+        type: 'bpmn:Task',
+        businessObject: bpmnFactory.create('bpmn:Task', {
+          id: 'Task_1',
+          name: 'Send Slack notification to John'
+        })
+      }, { x: 100, y: 100 }, canvas.getRootElement());
+
+      const refactorings2 = await refactorings.getRefactorings(elements);
+
+      // then
+      expect(refactorings2).to.have.length(1);
+      expect(openai.createChatCompletion).to.have.been.called;
+    }));
+
+  });
 
 
   describe('handlers', function() {
