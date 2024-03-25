@@ -21,29 +21,6 @@ import elementTemplates from '../../../../fixtures/element-templates/all.json';
 
 describe('OpenAIProvider', function() {
 
-  const openai = {
-    createChatCompletion: sinon.fake.returns({
-      choices:[
-        {
-          message: {
-            tool_calls: [
-              {
-                function: {
-                  name: 'template_Slack_v1',
-                  arguments: '{}'
-                }
-              }
-            ]
-          }
-        }
-      ]
-    })
-  };
-
-  beforeEach(function() {
-    openai.createChatCompletion.resetHistory();
-  });
-
   beforeEach(bootstrapModeler(diagramXML, {
     additionalModules: [
       CloudElementTemplatesCoreModule,
@@ -58,7 +35,17 @@ describe('OpenAIProvider', function() {
       }
     ],
     refactorings: {
-      openai
+      openai: {
+        createChatCompletion: () => ({
+          choices: [
+            {
+              message: {
+                content: 'Foobar'
+              }
+            }
+          ]
+        })
+      }
     },
     elementTemplates: [
       ...elementTemplates,
@@ -94,9 +81,13 @@ describe('OpenAIProvider', function() {
   }));
 
 
-  it('should get refactorings', inject(async function(elementRegistry, refactorings) {
+  it('should get refactorings', inject(async function(elementRegistry, openAIProvider, refactorings) {
 
     // given
+    const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
+      return [ { name: 'template_Slack_v1', arguments: {} } ];
+    });
+
     const elements = [
       elementRegistry.get('Task_1')
     ];
@@ -108,13 +99,17 @@ describe('OpenAIProvider', function() {
     expect(_refactorings).to.have.length(1);
     expect(_refactorings[0].id).to.equal('template_Slack_v1');
     expect(_refactorings[0].label).to.equal('Apply Slack Outbound Connector template');
-    expect(openai.createChatCompletion).to.have.been.called;
+    expect(spy).to.have.been.called;
   }));
 
 
-  it('should not get refactoring (more than one element)', inject(async function(elementRegistry, refactorings) {
+  it('should not get refactoring (more than one element)', inject(async function(elementRegistry, openAIProvider, refactorings) {
 
     // given
+    const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
+      return [ { name: 'template_Slack_v1', arguments: {} } ];
+    });
+
     const elements = [
       elementRegistry.get('StartEvent_1'),
       elementRegistry.get('Task_1')
@@ -125,15 +120,39 @@ describe('OpenAIProvider', function() {
 
     // then
     expect(_refactorings).to.have.length(0);
-    expect(openai.createChatCompletion).to.not.have.been.called;
+    expect(spy).to.not.have.been.called;
+  }));
+
+
+  it('should not get refactoring (unknown)', inject(async function(elementRegistry, openAIProvider, refactorings) {
+
+    // given
+    const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
+      return [ { name: 'template_MySpace_v1', arguments: {} } ];
+    });
+
+    const elements = [
+      elementRegistry.get('Task_1')
+    ];
+
+    // when
+    const _refactorings = await refactorings.getRefactorings(elements);
+
+    // then
+    expect(_refactorings).to.have.length(0);
+    expect(spy).to.have.been.called;
   }));
 
 
   describe('caching', function() {
 
-    it('should return cached', inject(async function(elementRegistry, refactorings) {
+    it('should return cached', inject(async function(elementRegistry, openAIProvider, refactorings) {
 
       // given
+      const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
+        return [ { name: 'template_Slack_v1', arguments: {} } ];
+      });
+
       const elements = [
         elementRegistry.get('Task_1')
       ];
@@ -141,9 +160,9 @@ describe('OpenAIProvider', function() {
       const refactorings1 = await refactorings.getRefactorings(elements);
 
       expect(refactorings1).to.have.length(1);
-      expect(openai.createChatCompletion).to.have.been.called;
+      expect(spy).to.have.been.called;
 
-      openai.createChatCompletion.resetHistory();
+      spy.resetHistory();
 
       // when
       const refactorings2 = await refactorings.getRefactorings(elements);
@@ -151,13 +170,17 @@ describe('OpenAIProvider', function() {
       // then
       expect(refactorings2).to.have.length(1);
       expect(refactorings2).to.eql(refactorings1);
-      expect(openai.createChatCompletion).not.to.have.been.called;
+      expect(spy).not.to.have.been.called;
     }));
 
 
-    it('should update ID of cached on element ID change', inject(async function(elementRegistry, modeling, refactorings) {
+    it('should update ID of cached on element ID change', inject(async function(elementRegistry, modeling, openAIProvider, refactorings) {
 
       // given
+      const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
+        return [ { name: 'template_Slack_v1', arguments: {} } ];
+      });
+
       const elements = [
         elementRegistry.get('Task_1')
       ];
@@ -165,9 +188,9 @@ describe('OpenAIProvider', function() {
       const refactorings1 = await refactorings.getRefactorings(elements);
 
       expect(refactorings1).to.have.length(1);
-      expect(openai.createChatCompletion).to.have.been.called;
+      expect(spy).to.have.been.called;
 
-      openai.createChatCompletion.resetHistory();
+      spy.resetHistory();
 
       // when
       modeling.updateProperties(elements[0], { id: 'Task_2' });
@@ -177,13 +200,17 @@ describe('OpenAIProvider', function() {
       // then
       expect(refactorings2).to.have.length(1);
       expect(refactorings2).to.eql(refactorings1);
-      expect(openai.createChatCompletion).not.to.have.been.called;
+      expect(spy).not.to.have.been.called;
     }));
 
 
-    it('shoud delete cached on element name change', inject(async function(elementRegistry, modeling, refactorings) {
+    it('shoud delete cached on element name change', inject(async function(elementRegistry, modeling, openAIProvider, refactorings) {
 
       // given
+      const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
+        return [ { name: 'template_Slack_v1', arguments: {} } ];
+      });
+
       const elements = [
         elementRegistry.get('Task_1')
       ];
@@ -191,9 +218,9 @@ describe('OpenAIProvider', function() {
       const refactorings1 = await refactorings.getRefactorings(elements);
 
       expect(refactorings1).to.have.length(1);
-      expect(openai.createChatCompletion).to.have.been.called;
+      expect(spy).to.have.been.called;
 
-      openai.createChatCompletion.resetHistory();
+      spy.resetHistory();
 
       // when
       modeling.updateProperties(elements[0], { name: 'Send Slack notification to John' });
@@ -202,14 +229,18 @@ describe('OpenAIProvider', function() {
 
       // then
       expect(refactorings2).to.have.length(1);
-      expect(openai.createChatCompletion).to.have.been.called;
+      expect(spy).to.have.been.called;
     }));
 
 
     it('should delete cached on element removed', inject(async function(
-        bpmnFactory, canvas, elementRegistry, modeling, refactorings) {
+        bpmnFactory, canvas, elementRegistry, modeling, openAIProvider, refactorings) {
 
       // given
+      const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
+        return [ { name: 'template_Slack_v1', arguments: {} } ];
+      });
+
       const elements = [
         elementRegistry.get('Task_1')
       ];
@@ -217,9 +248,9 @@ describe('OpenAIProvider', function() {
       const refactorings1 = await refactorings.getRefactorings(elements);
 
       expect(refactorings1).to.have.length(1);
-      expect(openai.createChatCompletion).to.have.been.called;
+      expect(spy).to.have.been.called;
 
-      openai.createChatCompletion.resetHistory();
+      spy.resetHistory();
 
       // when
       modeling.removeShape(elements[0]);
@@ -236,7 +267,7 @@ describe('OpenAIProvider', function() {
 
       // then
       expect(refactorings2).to.have.length(1);
-      expect(openai.createChatCompletion).to.have.been.called;
+      expect(spy).to.have.been.called;
     }));
 
   });
