@@ -45,7 +45,8 @@ describe('OpenAIProvider', function() {
             }
           ]
         })
-      }
+      },
+      debug: true
     },
     elementTemplates: [
       ...elementTemplates,
@@ -84,8 +85,8 @@ describe('OpenAIProvider', function() {
   it('should get refactorings', inject(async function(elementRegistry, openAIProvider, refactorings) {
 
     // given
-    const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
-      return [ { name: 'template_Slack_v1', arguments: {} } ];
+    const spy = sinon.stub(openAIProvider._openAIClient, 'getToolCalls').callsFake(() => {
+      return Promise.resolve([ { name: 'template_Slack_v1', arguments: {} } ]);
     });
 
     const elements = [
@@ -106,8 +107,8 @@ describe('OpenAIProvider', function() {
   it('should not get refactoring (more than one element)', inject(async function(elementRegistry, openAIProvider, refactorings) {
 
     // given
-    const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
-      return [ { name: 'template_Slack_v1', arguments: {} } ];
+    const spy = sinon.stub(openAIProvider._openAIClient, 'getToolCalls').callsFake(() => {
+      return Promise.resolve([ { name: 'template_Slack_v1', arguments: {} } ]);
     });
 
     const elements = [
@@ -127,8 +128,8 @@ describe('OpenAIProvider', function() {
   it('should not get refactoring (unknown)', inject(async function(elementRegistry, openAIProvider, refactorings) {
 
     // given
-    const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
-      return [ { name: 'template_MySpace_v1', arguments: {} } ];
+    const spy = sinon.stub(openAIProvider._openAIClient, 'getToolCalls').callsFake(() => {
+      return Promise.resolve([ { name: 'template_MySpace_v1', arguments: {} } ]);
     });
 
     const elements = [
@@ -149,8 +150,8 @@ describe('OpenAIProvider', function() {
     it('should return cached', inject(async function(elementRegistry, openAIProvider, refactorings) {
 
       // given
-      const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
-        return [ { name: 'template_Slack_v1', arguments: {} } ];
+      const spy = sinon.stub(openAIProvider._openAIClient, 'getToolCalls').callsFake(() => {
+        return Promise.resolve([ { name: 'template_Slack_v1', arguments: {} } ]);
       });
 
       const elements = [
@@ -160,6 +161,7 @@ describe('OpenAIProvider', function() {
       const refactorings1 = await refactorings.getRefactorings(elements);
 
       expect(refactorings1).to.have.length(1);
+      expect(refactorings1[0].id).to.equal('template_Slack_v1');
       expect(spy).to.have.been.called;
 
       spy.resetHistory();
@@ -169,7 +171,7 @@ describe('OpenAIProvider', function() {
 
       // then
       expect(refactorings2).to.have.length(1);
-      expect(refactorings2).to.eql(refactorings1);
+      expect(refactorings2[0].id).to.equal('template_Slack_v1');
       expect(spy).not.to.have.been.called;
     }));
 
@@ -177,8 +179,8 @@ describe('OpenAIProvider', function() {
     it('should update ID of cached on element ID change', inject(async function(elementRegistry, modeling, openAIProvider, refactorings) {
 
       // given
-      const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
-        return [ { name: 'template_Slack_v1', arguments: {} } ];
+      const spy = sinon.stub(openAIProvider._openAIClient, 'getToolCalls').callsFake(() => {
+        return Promise.resolve([ { name: 'template_Slack_v1', arguments: {} } ]);
       });
 
       const elements = [
@@ -188,6 +190,7 @@ describe('OpenAIProvider', function() {
       const refactorings1 = await refactorings.getRefactorings(elements);
 
       expect(refactorings1).to.have.length(1);
+      expect(refactorings1[0].id).to.equal('template_Slack_v1');
       expect(spy).to.have.been.called;
 
       spy.resetHistory();
@@ -199,7 +202,7 @@ describe('OpenAIProvider', function() {
 
       // then
       expect(refactorings2).to.have.length(1);
-      expect(refactorings2).to.eql(refactorings1);
+      expect(refactorings2[0].id).to.equal('template_Slack_v1');
       expect(spy).not.to.have.been.called;
     }));
 
@@ -207,8 +210,8 @@ describe('OpenAIProvider', function() {
     it('shoud delete cached on element name change', inject(async function(elementRegistry, modeling, openAIProvider, refactorings) {
 
       // given
-      const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
-        return [ { name: 'template_Slack_v1', arguments: {} } ];
+      const spy = sinon.stub(openAIProvider._openAIClient, 'getToolCalls').callsFake(() => {
+        return Promise.resolve([ { name: 'template_Slack_v1', arguments: {} } ]);
       });
 
       const elements = [
@@ -218,6 +221,7 @@ describe('OpenAIProvider', function() {
       const refactorings1 = await refactorings.getRefactorings(elements);
 
       expect(refactorings1).to.have.length(1);
+      expect(refactorings1[0].id).to.equal('template_Slack_v1');
       expect(spy).to.have.been.called;
 
       spy.resetHistory();
@@ -229,6 +233,7 @@ describe('OpenAIProvider', function() {
 
       // then
       expect(refactorings2).to.have.length(1);
+      expect(refactorings2[0].id).to.equal('template_Slack_v1');
       expect(spy).to.have.been.called;
     }));
 
@@ -237,8 +242,8 @@ describe('OpenAIProvider', function() {
         bpmnFactory, canvas, elementRegistry, modeling, openAIProvider, refactorings) {
 
       // given
-      const spy = sinon.stub(openAIProvider, '_getToolCalls').callsFake(() => {
-        return [ { name: 'template_Slack_v1', arguments: {} } ];
+      const spy = sinon.stub(openAIProvider._openAIClient, 'getToolCalls').callsFake(() => {
+        return Promise.resolve([ { name: 'template_Slack_v1', arguments: {} } ]);
       });
 
       const elements = [
@@ -248,6 +253,7 @@ describe('OpenAIProvider', function() {
       const refactorings1 = await refactorings.getRefactorings(elements);
 
       expect(refactorings1).to.have.length(1);
+      expect(refactorings1[0].id).to.equal('template_Slack_v1');
       expect(spy).to.have.been.called;
 
       spy.resetHistory();
@@ -267,6 +273,7 @@ describe('OpenAIProvider', function() {
 
       // then
       expect(refactorings2).to.have.length(1);
+      expect(refactorings2[0].id).to.equal('template_Slack_v1');
       expect(spy).to.have.been.called;
     }));
 
