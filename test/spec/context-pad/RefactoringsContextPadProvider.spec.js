@@ -13,9 +13,10 @@ import {
 } from 'min-dom';
 
 import { BpmnImprovedCanvasModule } from '@camunda/improved-canvas';
+import { CloudElementTemplatesCoreModule } from 'bpmn-js-element-templates';
 
 import RefactoringsContextPadModule from '../../../lib/context-pad/';
-import MockPopupMenuModule from './MockPopupMenuProvider';
+import refactoringsModule from '../../../lib/refactorings';
 
 import diagramXML from '../../fixtures/bpmn/simple.bpmn';
 
@@ -26,7 +27,8 @@ describe('Context Pad', function() {
     additionalModules: [
       BpmnImprovedCanvasModule,
       RefactoringsContextPadModule,
-      MockPopupMenuModule
+      refactoringsModule,
+      CloudElementTemplatesCoreModule
     ]
   }));
 
@@ -57,17 +59,17 @@ describe('Context Pad', function() {
   }));
 
 
-  it('should pre-fetch results in popup menu provider', inject(function(elementRegistry, contextPad, refactoringsPopupMenuProvider) {
+  it('should pre-fetch results in popup menu provider', inject(function(elementRegistry, contextPad, refactorings) {
 
     // given
     const task = elementRegistry.get('Task_1');
-    refactoringsPopupMenuProvider.fetchRefactoringActions = sinon.spy();
+    refactorings.getRefactorings = sinon.spy();
 
     // when
     contextPad.open(task);
 
     // then
-    expect(refactoringsPopupMenuProvider.fetchRefactoringActions).to.have.been.calledWith(task);
+    expect(refactorings.getRefactorings).to.have.been.calledWith([ task ]);
 
   }));
 
