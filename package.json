@@ -29,7 +29,7 @@
     "dist"
   ],
   "scripts": {
-    "all": "run-s lint test:openai build",
+    "all": "run-s lint test build",
     "test": "karma start karma.config.js",
     "test:openai": "cross-env TEST_OPENAI=true karma start karma.config.js",
     "lint": "eslint .",
