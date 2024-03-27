@@ -16,11 +16,11 @@ Update the [tool descriptions](https://platform.openai.com/docs/api-reference/as
 # fetch latest element templates from camunda/web-modeler repository
 npm run fetch-element-templates
 
-# create handler descriptions
-npm run create-element-template-handler-descriptions
+# create tool descriptions
+npm run create-element-template-tool-descriptions
 
-# or create handler descriptions using OpenAI
-npm run create-element-template-handler-descriptions:openai
+# or create tool descriptions using OpenAI
+npm run create-element-template-tool-descriptions:openai
 ```
 
 ## License

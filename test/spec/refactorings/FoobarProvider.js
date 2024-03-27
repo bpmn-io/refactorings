@@ -13,23 +13,17 @@ export default class FoobarProvider {
       {
         id: 'foo',
         label: 'Foo',
-        execute: (elements) => {
-          console.log('Foo', elements);
-        }
+        execute: () => {}
       },
       {
         id: 'bar',
         label: 'Bar',
-        execute: (elements) => {
-          console.log('Bar', elements);
-        }
+        execute: () => {}
       },
       {
         id: 'baz',
         label: 'Baz',
-        execute: (elements) => {
-          console.log('Baz', elements);
-        }
+        execute: () => {}
       }
     ];
   }

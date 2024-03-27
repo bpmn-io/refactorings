@@ -8,7 +8,7 @@ import { CloudElementTemplatesCoreModule } from 'bpmn-js-element-templates';
 import RefactoringsModule from '../../../lib/refactorings';
 import Refactorings from '../../../lib/refactorings/Refactorings';
 
-import OpenAIProvider from '../../../lib/refactorings/providers/open-ai/OpenAIProvider';
+import OpenAIElementTemplatesProvider from '../../../lib/refactorings/providers/open-ai-element-emplates/OpenAIElementTemplatesProvider';
 
 import FoobarProvider from './FoobarProvider';
 
@@ -22,7 +22,12 @@ describe('Refactorings', function() {
       additionalModules: [
         CloudElementTemplatesCoreModule,
         RefactoringsModule
-      ]
+      ],
+      refactorings: {
+        openai: {
+          createChatCompletion: () => {}
+        }
+      }
     }));
 
 
@@ -31,8 +36,8 @@ describe('Refactorings', function() {
       // given
       // when
       // then
-      expect(refactorings._providers).to.have.length(1);
-      expect(refactorings._providers[0]).to.be.instanceOf(OpenAIProvider);
+      expect(refactorings.getProviders()).to.have.length(1);
+      expect(refactorings.getProviders()[0]).to.be.instanceOf(OpenAIElementTemplatesProvider);
     }));
 
 
@@ -43,9 +48,9 @@ describe('Refactorings', function() {
       injector.instantiate(FoobarProvider);
 
       // then
-      expect(refactorings._providers).to.have.length(2);
-      expect(refactorings._providers[0]).to.be.instanceOf(OpenAIProvider);
-      expect(refactorings._providers[1]).to.be.instanceOf(FoobarProvider);
+      expect(refactorings.getProviders()).to.have.length(2);
+      expect(refactorings.getProviders()[0]).to.be.instanceOf(OpenAIElementTemplatesProvider);
+      expect(refactorings.getProviders()[1]).to.be.instanceOf(FoobarProvider);
     }));
 
   });

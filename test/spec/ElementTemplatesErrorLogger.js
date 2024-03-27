@@ -1,7 +1,7 @@
 class ElementTemplatesErrorLogger {
   constructor(eventBus) {
     eventBus.on('elementTemplates.errors', ({ errors }) => {
-      console.error('elementTemplates.errors', errors);
+      console.error('elementTemplates.errors', errors.map(({ message }) => message));
     });
   }
 }

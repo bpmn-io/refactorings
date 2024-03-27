@@ -108,8 +108,7 @@ describe('<Example>', function() {
       refactorings: {
         openai: {
           createChatCompletion: (...args) => openai.chat.completions.create(...args)
-        },
-        debug: true
+        }
       },
       elementTemplates,
       ...options

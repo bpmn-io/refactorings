@@ -29,7 +29,12 @@ describe('Context Pad', function() {
       RefactoringsContextPadModule,
       refactoringsModule,
       CloudElementTemplatesCoreModule
-    ]
+    ],
+    refactorings: {
+      openai: {
+        createChatCompletion: () => {}
+      }
+    }
   }));
 
 
@@ -70,7 +75,6 @@ describe('Context Pad', function() {
 
     // then
     expect(refactorings.getRefactorings).to.have.been.calledWith([ task ]);
-
   }));
 
 
