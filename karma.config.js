@@ -19,7 +19,7 @@ const absoluteBasePath = path.resolve(path.join(__dirname, basePath));
 // use puppeteer provided Chrome for testing
 process.env.CHROME_BIN = require('puppeteer').executablePath();
 
-const suite = 'test/testBundle.cjs';
+const suite = 'test/testBundle.js';
 
 module.exports = function(karma) {
 

@@ -45,6 +45,12 @@ function getTemplateDetails(targetFilePath) {
 
     const latestTemplate = getLatestTemplate(templates, id);
 
+    if (latestTemplate.deprecated) {
+      console.log('Ignoring deprecated template:', latestTemplate.id, latestTemplate.version, latestTemplate.name);
+
+      return;
+    }
+
     if (!templateDetails[ latestTemplate.id ]) {
       const {
         appliesTo,
@@ -109,8 +115,6 @@ Connector template description: Create folder or a file from template
 Possible element types: Task
 Tool description: Can apply a Google Drive connector template to a task whose name mentions Google Drive or has a name similar to Create Google Drive folder.
 
-If the connector template description mentions deprectation, simply ignore it as
-it is not relevant to the tool description.
 When responding do not include "Tool description:" or quotation marks in your
 response!
 Respond only with the tool description!`
@@ -135,7 +139,7 @@ Possible element types: ${ appliesTo.map(type => typeToString(type)).join(', ') 
   return templateDetails;
 }
 
-function updateTemplateHandlerDescriptions(targetFilePath, descriptions) {
+function updateTemplateToolDescriptions(targetFilePath, descriptions) {
   fs.writeFileSync(targetFilePath, JSON.stringify(descriptions, null, 2));
 }
 
@@ -155,7 +159,7 @@ function updateTemplateHandlerDescriptions(targetFilePath, descriptions) {
     }, {});
   }
 
-  updateTemplateHandlerDescriptions('lib/refactorings/providers/open-ai/handlers/elementTemplateHandlerDescriptions.json', descriptions);
+  updateTemplateToolDescriptions('lib/refactorings/providers/open-ai-element-templates/elementTemplateToolDescriptions.json', descriptions);
 
   console.log('Updated descriptions');
 })();

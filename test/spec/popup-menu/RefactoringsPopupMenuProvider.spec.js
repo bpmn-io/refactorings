@@ -23,7 +23,12 @@ describe('Popup Menu', function() {
       CloudElementTemplatesCoreModule,
       RefactoringsPopupMenuModule,
       RefactoringsModule
-    ]
+    ],
+    refactorings: {
+      openai: {
+        createChatCompletion: () => {}
+      }
+    }
   }));
 
 
