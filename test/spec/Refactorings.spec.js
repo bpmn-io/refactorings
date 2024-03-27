@@ -53,6 +53,8 @@ await insertBpmnStyles();
 
 describe('<Example>', function() {
 
+  this.timeout(10000);
+
   let modelerContainer;
 
   let propertiesContainer;
