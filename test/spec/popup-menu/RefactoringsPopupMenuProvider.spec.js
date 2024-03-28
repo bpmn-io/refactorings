@@ -36,6 +36,7 @@ describe('Popup Menu', function() {
 
     // given
     const task = elementRegistry.get('Task_1');
+
     refactorings.getRefactorings = sinon.spy();
 
     // when
@@ -50,10 +51,15 @@ describe('Popup Menu', function() {
 
     // given
     const task = elementRegistry.get('Task_1');
-    refactorings.getRefactorings = () => [ { id: 'foo', label: 'foo' }, { id: 'bar', label: 'bar' } ];
+
+    refactorings.getRefactorings = () => [
+      { id: 'foo', label: 'foo' },
+      { id: 'bar', label: 'bar' }
+    ];
 
     // when
     await refactoringsPopupMenuProvider.fetchRefactoringActions(task);
+
     popupMenu.open(task, 'refactoring-actions', {
       position: { x: 0, y: 0 }
     });
@@ -73,6 +79,7 @@ describe('Popup Menu', function() {
 
     // given
     const task = elementRegistry.get('Task_1');
+
     refactorings.getRefactorings = () => new Promise(() => {});
 
     // when
@@ -90,7 +97,8 @@ describe('Popup Menu', function() {
 
     // given
     const task = elementRegistry.get('Task_1');
-    refactorings.getRefactorings = () => [];
+
+    refactorings.getRefactorings = () => Promise.resolve([]);
 
     // when
     popupMenu.open(task, 'refactoring-actions', {
@@ -98,17 +106,23 @@ describe('Popup Menu', function() {
     });
 
     // then
+    waitFor(() => {
+      expect(domQuery('.djs-popup-no-results .cds--inline-loading')).not.to.exist;
+    });
+
     expect(domQuery('.djs-popup-no-results')).to.exist;
-    expect(domQuery('.djs-popup-no-results .cds--inline-loading')).not.to.exist;
   }));
 
 
-  it('should show entries when loading finises', inject(async function(elementRegistry, refactorings, popupMenu) {
+  it('should show entries when loading finished', inject(async function(elementRegistry, refactorings, popupMenu) {
 
     // given
     const task = elementRegistry.get('Task_1');
+
     let resolve;
+
     refactorings.getRefactorings = () => new Promise((r) => {resolve = r;});
+
     popupMenu.open(task, 'refactoring-actions', {
       position: { x: 0, y: 0 }
     });
@@ -118,7 +132,10 @@ describe('Popup Menu', function() {
     expect(domQuery('.djs-popup-no-results .cds--inline-loading')).to.exist;
 
     // when
-    resolve([ { id: 'foo', label: 'foo' }, { id: 'bar', label: 'bar' } ]);
+    resolve([
+      { id: 'foo', label: 'foo' },
+      { id: 'bar', label: 'bar' }
+    ]);
 
     // then
     waitFor(() => {
@@ -130,16 +147,18 @@ describe('Popup Menu', function() {
         'bar'
       ]);
     });
-
   }));
 
 
-  it('should show empty state when loading finises', inject(async function(elementRegistry, refactorings, popupMenu) {
+  it('should show empty state when loading finished', inject(async function(elementRegistry, refactorings, popupMenu) {
 
     // given
     const task = elementRegistry.get('Task_1');
+
     let resolve;
+
     refactorings.getRefactorings = () => new Promise((r) => {resolve = r;});
+
     popupMenu.open(task, 'refactoring-actions', {
       position: { x: 0, y: 0 }
     });
@@ -149,16 +168,13 @@ describe('Popup Menu', function() {
     expect(domQuery('.djs-popup-no-results .cds--inline-loading')).to.exist;
 
     // when
-    resolve([ ]);
+    resolve([]);
 
     // then
     waitFor(() => {
       expect(domQuery('.djs-popup-no-results')).to.exist;
       expect(domQuery('.djs-popup-no-results .cds--inline-loading')).not.to.exist;
     });
-
   }));
 
 });
-
-
