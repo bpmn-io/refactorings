@@ -1,12 +1,5 @@
 @use '@carbon/styles/scss/components/inline-loading';
 
-#refactoring-action-placeholder.empty .no-refactorings-available {
-  &:hover {
-    background-color: white;
-  }
-    color: #8d8d8d;
-}
-
 .suggest-refactoring {
   .cds--loading {
     line-height: 1em;
