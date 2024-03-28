@@ -64,7 +64,7 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
 
     const expectedPercentage = 100;
 
-    expectToolCalls('bpmn:Task', 'Update task in asana', [
+    expectToolCallsOnly('bpmn:Task', 'Update task in asana', [
       toolCall(elementTemplateIdToToolName('io.camunda.connectors.Asana.v1'))
     ], expectedPercentage);
 
