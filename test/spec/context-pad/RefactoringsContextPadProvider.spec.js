@@ -38,29 +38,29 @@ describe('Context Pad', function() {
   }));
 
 
-  it('should add entry', inject(function(elementRegistry, contextPad) {
+  it('should add entry (shape)', inject(function(elementRegistry, contextPad) {
 
     // given
-    const task = elementRegistry.get('Task_1');
+    const startEvent = elementRegistry.get('StartEvent_1');
 
     // when
-    contextPad.open(task);
+    contextPad.open(startEvent);
 
     // then
     expect(domQuery('.entry.suggest-refactoring')).to.exist;
   }));
 
 
-  it('should show refactoring icon', inject(function(elementRegistry, contextPad) {
+  it('should not add entry (label)', inject(function(elementRegistry, contextPad) {
 
     // given
-    const task = elementRegistry.get('Task_1');
+    const startEvent = elementRegistry.get('StartEvent_1_label');
 
     // when
-    contextPad.open(task);
+    contextPad.open(startEvent);
 
     // then
-    expect(domQuery('.entry.suggest-refactoring')).to.exist;
+    expect(domQuery('.entry.suggest-refactoring')).not.to.exist;
   }));
 
 
@@ -68,6 +68,7 @@ describe('Context Pad', function() {
 
     // given
     const task = elementRegistry.get('Task_1');
+
     refactorings.getRefactorings = sinon.spy();
 
     // when
@@ -82,6 +83,7 @@ describe('Context Pad', function() {
 
     // given
     const task = elementRegistry.get('Task_1');
+
     popupMenu.open = sinon.spy();
 
     contextPad.open(task);
@@ -95,7 +97,6 @@ describe('Context Pad', function() {
     waitFor(() => {
       expect(popupMenu.open).to.have.been.called;
     });
-
   }));
 
 });
