@@ -357,9 +357,9 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
 
 
   /**
-   * Adversial examples. We expect no tool calls to be returned.
+   * Adversarial examples. We expect no tool calls to be returned.
    */
-  describe('adversial', function() {
+  describe('adversarial', function() {
 
     const expectedPercentage = 100;
 
