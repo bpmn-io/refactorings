@@ -357,6 +357,26 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
 
 
   /**
+   * Names unrelated to any of the tools. We don't expect any tools to be
+   * returned.
+   */
+  describe.only('unrelated', function() {
+
+    expectToolCalls('bpmn:Task', 'Chop wood', [], 100);
+
+
+    expectToolCalls('bpmn:Task', 'Go to the supermarket', [], 100);
+
+
+    expectToolCalls('bpmn:Task', 'Meet your friend in the park', [], 100);
+
+
+    expectToolCalls('bpmn:Task', 'Sing a song', [], 100);
+
+  });
+
+
+  /**
    * Adversial examples. We expect no tool calls to be returned.
    */
   describe('adversial', function() {
