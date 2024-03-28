@@ -10,6 +10,16 @@ npm install
 npm start
 ```
 
+Run the tests:
+
+```bash
+# run tests
+npm test
+
+# run OpenAI tests
+npm run test:openai
+```
+
 Update the [tool descriptions](https://platform.openai.com/docs/api-reference/assistants/createAssistant#assistants-createassistant-tools) used for refactorings powered by OpenAI:
 
 ```bash
