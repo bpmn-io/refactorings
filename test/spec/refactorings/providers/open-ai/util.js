@@ -73,7 +73,7 @@ export function expectToolCalls(elementType, elementName, expected, expectedPerc
       }
 
       results.forEach((result, index) => {
-        console.error(`${index}/${numberOfRequests} Expected ${ formatToolCalls(expected) }, got ${ formatToolCalls(result) }`);
+        console.error(`${index + 1}/${numberOfRequests} Expected ${ formatToolCalls(expected) }, got ${ formatToolCalls(result) }`);
       });
 
       expect(numberOfResultsEqual).to.be.at.least(numberOfRequiredEqual, `Expected ${ numberOfRequiredEqual }/${ numberOfRequests } but got ${ numberOfResultsEqual }`);
