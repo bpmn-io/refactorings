@@ -26,11 +26,12 @@ export function toolCall(name, args = {}) {
  * @param {string} elementName Name of BPMN element
  * @param {ToolCall[]} expected Expected tool names
  * @param {number} [expectedPercentage=100] Percentage of requests that must return expected
- * @param {number} [numberOfRequests=10] Number of requests to send
+ * @param {number} [numberOfRequests=10] Number of requests to send, defaults to process.env.TEST_OPENAI_REQUESTS or 10
  * tool calls
  * @param {boolean} [only=false] Run only this test
  */
-export function expectToolCalls(elementType, elementName, expected, expectedPercentage = 100, numberOfRequests = 10, only = false) {
+export function expectToolCalls(elementType, elementName, expected, expectedPercentage = 100, numberOfRequests = -1, only = false) {
+  const totalRequests = numberOfRequests === -1 ? process.env.TEST_OPENAI_REQUESTS || 10 : numberOfRequests;
   return describe(`tool calls for ${ elementType } with name "${ elementName }"`, function() {
 
     (testOpenai && only ? it.only : it)('should return expected tool calls', inject(async function(bpmnFactory, refactorings) {
@@ -51,14 +52,14 @@ export function expectToolCalls(elementType, elementName, expected, expectedPerc
       const promises = [];
 
       // when
-      for (let i = 0; i < numberOfRequests; i++) {
+      for (let i = 0; i < totalRequests; i++) {
         promises.push(provider._openAIClient.getToolCalls(element, tools));
       }
 
       const results = await Promise.all(promises);
 
       // then
-      const numberOfRequiredEqual = Math.ceil(expectedPercentage / 100 * numberOfRequests);
+      const numberOfRequiredEqual = Math.ceil(expectedPercentage / 100 * totalRequests);
 
       const resultsEqual = results.filter(result => toolCallsEqual(result, expected));
 
@@ -67,16 +68,16 @@ export function expectToolCalls(elementType, elementName, expected, expectedPerc
       console.error(`Expecting ${ formatToolCalls(expected) } for ${ typeToString(element) } "${ elementName }"`);
 
       if (numberOfResultsEqual < numberOfRequiredEqual) {
-        console.log(`🔴 ${ numberOfResultsEqual }/${ numberOfRequests } as expected (${ expectedPercentage }% required)`);
+        console.log(`🔴 ${ numberOfResultsEqual }/${ totalRequests } as expected (${ expectedPercentage }% required)`);
       } else {
-        console.log(`🟢 ${ numberOfResultsEqual }/${ numberOfRequests } as expected (${ expectedPercentage }% required)`);
+        console.log(`🟢 ${ numberOfResultsEqual }/${ totalRequests } as expected (${ expectedPercentage }% required)`);
       }
 
       results.forEach((result, index) => {
-        console.error(`${index + 1}/${numberOfRequests} Expected ${ formatToolCalls(expected) }, got ${ formatToolCalls(result) }`);
+        console.error(`${index + 1}/${totalRequests} Expected ${ formatToolCalls(expected) }, got ${ formatToolCalls(result) }`);
       });
 
-      expect(numberOfResultsEqual).to.be.at.least(numberOfRequiredEqual, `Expected ${ numberOfRequiredEqual }/${ numberOfRequests } but got ${ numberOfResultsEqual }`);
+      expect(numberOfResultsEqual).to.be.at.least(numberOfRequiredEqual, `Expected ${ numberOfRequiredEqual }/${ totalRequests } but got ${ numberOfResultsEqual }`);
     }));
 
   });
