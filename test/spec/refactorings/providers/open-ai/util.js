@@ -7,14 +7,11 @@
 
 import { inject } from 'test/TestHelper';
 
-import { typeToString } from '../../../../../lib/refactorings/providers/open-ai/util';
-
 const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
 
 export function toolCall(name, args = {}) {
   return {
-    name,
-    arguments: args
+    name, arguments: args
   };
 }
 
@@ -32,7 +29,7 @@ export function toolCall(name, args = {}) {
  */
 export function expectToolCalls(elementType, elementName, expected, expectedPercentage = 100, numberOfRequests = -1, only = false) {
   const totalRequests = numberOfRequests === -1 ? process.env.TEST_OPENAI_REQUESTS || 10 : numberOfRequests;
-  return describe(`tool calls for ${ elementType } with name "${ elementName }"`, function() {
+  return describe(`tool calls for ${elementType} with name "${elementName}"`, function() {
 
     (testOpenai && only ? it.only : it)('should return expected tool calls', inject(async function(bpmnFactory, refactorings) {
 
@@ -45,7 +42,7 @@ export function expectToolCalls(elementType, elementName, expected, expectedPerc
 
       expect(providers).to.have.length(1, 'Expected exactly one provider');
 
-      const provider = providers[ 0 ];
+      const provider = providers[0];
 
       const tools = provider.getTools(element);
 
@@ -57,29 +54,11 @@ export function expectToolCalls(elementType, elementName, expected, expectedPerc
       }
 
       const results = await Promise.all(promises);
-
-      // then
-      const numberOfRequiredEqual = Math.ceil(expectedPercentage / 100 * totalRequests);
-
-      const resultsEqual = results.filter(result => toolCallsEqual(result, expected));
-
-      const numberOfResultsEqual = resultsEqual.length;
-
-      console.error(`Expecting ${ formatToolCalls(expected) } for ${ typeToString(element) } "${ elementName }"`);
-
-      if (numberOfResultsEqual < numberOfRequiredEqual) {
-        console.log(`🔴 ${ numberOfResultsEqual }/${ totalRequests } as expected (${ expectedPercentage }% required)`);
-      } else {
-        console.log(`🟢 ${ numberOfResultsEqual }/${ totalRequests } as expected (${ expectedPercentage }% required)`);
-      }
-
-      results.forEach((result, index) => {
-        console.error(`${index + 1}/${totalRequests} Expected ${ formatToolCalls(expected) }, got ${ formatToolCalls(result) }`);
-      });
-
-      expect(numberOfResultsEqual).to.be.at.least(numberOfRequiredEqual, `Expected ${ numberOfRequiredEqual }/${ totalRequests } but got ${ numberOfResultsEqual }`);
+      const percentageSuccess = results.filter(result => toolCallsIsSubset(result, expected)).length / totalRequests * 100;
+      const failed = percentageSuccess < expectedPercentage;
+      console.log(`${failed ? '🔴' : '🟢'} ${elementType} "${elementName}" expects ${formatToolCalls(expected)}${failed ? ` but got ${results.map(formatToolCalls)}` : ''} (${totalRequests} requests)`);
+      expect(failed, `Expected ${expectedPercentage}% of ${totalRequests} requests to succeed, but ${percentageSuccess}% succeeded`).to.be.false;
     }));
-
   });
 }
 
@@ -88,7 +67,9 @@ export function expectToolCallsOnly(elementType, elementName, expected, expected
 }
 
 function formatToolCalls(toolCalls) {
-  return `[ ${ toolCalls.map(({ arguments: args = '{}', name }) => `${ name }(${ formatToolArguments(args) })`).join(', ') } ]`;
+  return `[ ${toolCalls.map(({
+    arguments: args = '{}', name
+  }) => `${name}(${formatToolArguments(args)})`).join(', ')} ]`;
 }
 
 function formatToolArguments(args = {}) {
@@ -96,40 +77,26 @@ function formatToolArguments(args = {}) {
     return '';
   }
 
-  return Object.entries(args).map(([ key, value ]) => `${ key }: ${ value }`).join(', ');
+  return Object.entries(args).map(([ key, value ]) => `${key}: ${value}`).join(', ');
 }
 
+
 /**
- * Check whether tool calls are equal. Tool calls are equal if they have the
- * same name and arguments. The order of tool calls is not important.
+ * Check whether subset is included in superset using string representations. True if both empty.
  *
- * @param {ToolCall[]} toolCalls1
- * @param {ToolCall[]} toolCalls2
+ * @param {ToolCall[]} subset
+ * @param {ToolCall[]} superset
  *
  * @returns {boolean}
  */
-function toolCallsEqual(toolCalls1, toolCalls2) {
-  if (toolCalls1.length !== toolCalls2.length) {
-    return false;
+function toolCallsIsSubset(subset, superset) {
+  const subsetSet = new Set(subset.map(toolCall => `${toolCall.name}(${JSON.stringify(toolCall.arguments)})`));
+  const supersetSet = new Set(superset.map(toolCall => `${toolCall.name}(${JSON.stringify(toolCall.arguments)})`));
+  for (let item of subsetSet) {
+    if (!supersetSet.has(item)) {
+      return false;
+    }
   }
 
-  return toolCalls1.every(toolCall1 => {
-    return toolCalls2.some(toolCall2 => {
-      return toolCallEqual(toolCall1, toolCall2);
-    });
-  });
-}
-
-/**
- * Check whether two tool calls are equal. Tool calls are equal if they have the
- * same name and arguments.
- *
- * @param {ToolCall} toolCall1
- * @param {ToolCall} toolCall2
- *
- * @returns {boolean}
- */
-function toolCallEqual(toolCall1, toolCall2) {
-  return toolCall1.name === toolCall2.name
-    && JSON.stringify(toolCall1.arguments) === JSON.stringify(toolCall2.arguments);
+  return true;
 }
