@@ -48,11 +48,13 @@ export function expectToolCalls(elementType, elementName, expected, expectedPerc
 
       const tools = provider.getTools(element);
 
+      const userPrompt = provider.getUserPrompt(element);
+
       const promises = [];
 
       // when
       for (let i = 0; i < numberOfRequests; i++) {
-        promises.push(provider._openAIClient.getToolCalls(element, tools));
+        promises.push(provider._openAIClient.getToolCalls(element, tools, userPrompt));
       }
 
       const results = await Promise.all(promises);
@@ -82,9 +84,9 @@ export function expectToolCalls(elementType, elementName, expected, expectedPerc
   });
 }
 
-export function expectToolCallsOnly(elementType, elementName, expected, expectedPercentage, numberOfRequests) {
+expectToolCalls.only = function(elementType, elementName, expected, expectedPercentage = 100, numberOfRequests = 10) {
   return expectToolCalls(elementType, elementName, expected, expectedPercentage, numberOfRequests, true);
-}
+};
 
 function formatToolCalls(toolCalls) {
   return `[ ${ toolCalls.map(({ arguments: args = '{}', name }) => `${ name }(${ formatToolArguments(args) })`).join(', ') } ]`;

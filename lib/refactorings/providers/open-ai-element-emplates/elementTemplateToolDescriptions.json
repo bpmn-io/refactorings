@@ -14,7 +14,7 @@
   "io.camunda.connectors.inbound.AWSSNS.MessageStartEvent.v1": "Can apply an SNS HTTPS Message Start Event Connector template to a start event whose name mentions AWS SNS or has a name similar to Wait for SNS notification.",
   "io.camunda.connectors.inbound.AWSSNS.StartEvent.v1": "Can apply an SNS HTTPS connector template to a start event whose name mentions AWS SNS or has a name similar to Wait for SNS notification.",
   "io.camunda.connectors.AWSSQS.boundary.v1": "Can apply an Amazon SQS connector template to a boundary event whose name mentions Amazon SQS or has a name similar to Receive SQS message.",
-  "io.camunda.connectors.AWSSQS.v1": "Can apply an Amazon SQS connector template to a task whose name mentions Amazon SQS or has a name similar to Send message to SQS queue.",
+  "io.camunda.connectors.AWSSQS.v1": "Can apply an Amazon SQS connector template to a task whose name mentions Amazon SQS, queues or has a name similar to Send message.",
   "io.camunda.connectors.AWSSQS.intermediate.v1": "Can apply an Amazon SQS connector template to an intermediate catch or throw event whose name mentions Amazon SQS or has a name similar to Wait for SQS message.",
   "io.camunda.connectors.AWSSQS.StartEvent.v1": "Can apply an Amazon SQS connector template to a start event whose name mentions Amazon SQS, queue message reception, or has a name similar to Wait for Amazon SQS message.",
   "io.camunda.connectors.AWSSQS.startmessage.v1": "Can apply an Amazon SQS connector template to a start event whose name mentions Amazon SQS or has a name similar to Wait for SQS message.",
@@ -49,7 +49,7 @@
   "io.camunda.connectors.inbound.RabbitMQ.StartEvent.v1": "Can apply a RabbitMQ connector template to a start event whose name mentions RabbitMQ or is labeled similarly to Wait for RabbitMQ message.",
   "io.camunda.connectors.Salesforce.v1": "Can apply a Salesforce Outbound connector template to a task whose name mentions Salesforce or has a name similar to Update Salesforce record.",
   "io.camunda.connectors.SendGrid.v2": "Can apply a SendGrid connector template to a task whose name mentions SendGrid or has a name similar to Send email via SendGrid.",
-  "io.camunda.connectors.Slack.v1": "Can apply a Slack connector template to a task whose name mentions Slack or has a name similar to Send Slack notification.",
+  "io.camunda.connectors.Slack.v1": "Can apply a Slack connector template to a task whose name mentions Slack or has a name similar to Send message or Create channel.",
   "io.camunda.connectors.inbound.Slack.BoundaryEvent.v1": "Can apply a Slack Webhook connector template to a boundary event whose name mentions Slack or has a name similar to Receive Slack event.",
   "io.camunda.connectors.inbound.Slack.IntermediateCatchEvent.v1": "Can apply a Slack Webhook connector template to either an intermediate catch event or an intermediate throw event whose name mentions Slack or has a name similar to Receive Slack event or Wait for Slack webhook.",
   "io.camunda.connectors.inbound.Slack.MessageStartEvent.v1": "Can apply a Slack Webhook connector template to a start event whose name mentions Slack or has a name similar to Wait for Slack event.",
@@ -64,5 +64,5 @@
   "io.camunda.connectors.webhook.WebhookConnectorIntermediate.v1": "Can apply a Webhook connector template to an intermediate catch event or intermediate throw event whose name mentions Webhook or has a name similar to Wait for Webhook callback.",
   "io.camunda.connectors.webhook.WebhookConnector.v1": "Can apply a Webhook connector template to a start event whose name includes \"webhook\" or is similar to \"Receive webhook callback\".",
   "io.camunda.connectors.webhook.WebhookConnectorStartMessage.v1": "Can apply a Webhook Message Start Event connector template to a start event whose name includes 'Webhook' or is similar to 'Receive webhook callback'.",
-  "io.camunda.connectors.WhatsApp.v1": "Can apply a WhatsApp Business Outbound connector template to a task whose name mentions WhatsApp or has a name similar to Send WhatsApp message."
+  "io.camunda.connectors.WhatsApp.v1": "Can apply a WhatsApp Business Outbound connector template to a task whose name mentions WhatsApp or has a name similar to Send message."
 }
