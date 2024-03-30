@@ -34,7 +34,7 @@
   "io.camunda.connectors.http.Polling.Boundary": "Can apply an HTTP Polling connector template to a boundary event whose name mentions HTTP or polling, or has a name similar to Check HTTP endpoint periodically.",
   "io.camunda.connectors.http.Polling": "Can apply an HTTP Polling connector template to an intermediate catch or throw event whose name includes phrasing like Poll HTTP endpoint or contains references to periodic HTTP request checks.",
   "io.camunda.connectors.inbound.KafkaMessageStart.v1": "Can apply a Kafka Message Start Event connector template to a start event whose name mentions Kafka or has a name similar to Wait for Kafka message.",
-  "io.camunda.connectors.KAFKA.v1": "Can apply a Kafka Outbound connector template to a task whose name mentions Kafka or has a name similar to Send Kafka message.",
+  "io.camunda.connectors.KAFKA.v1": "Can apply a Kafka Outbound connector template to a task whose name mentions Kafka or has a name similar to Send message or Send Kafka message.",
   "io.camunda.connectors.inbound.KafkaBoundary.v1": "Can apply a Kafka Boundary Event connector template to a boundary event whose name mentions Kafka or has a name similar to Listen to Kafka messages.",
   "io.camunda.connectors.inbound.KafkaIntermediate.v1": "Can apply a Kafka connector template to an intermediate catch event or intermediate throw event whose name mentions Kafka or has a name similar to Consume Kafka message.",
   "io.camunda.connectors.inbound.KAFKA.v1": "Automatically integrates a Kafka connector template with a start event to consume messages if the event's name includes \"Kafka\" or suggests waiting for Kafka messages, such as \"Listen to Kafka topic\".",

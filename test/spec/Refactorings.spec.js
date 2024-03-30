@@ -116,7 +116,7 @@ describe('<Example>', function() {
       ...options
     });
 
-    enableLogging && enableLogging(modeler, !!singleStart);
+    // enableLogging && enableLogging(modeler, !!singleStart);
 
     setBpmnJS(modeler);
 
