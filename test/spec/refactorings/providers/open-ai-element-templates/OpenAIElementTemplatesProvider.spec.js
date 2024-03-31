@@ -7,6 +7,8 @@ import { CloudElementTemplatesCoreModule } from 'bpmn-js-element-templates';
 
 import Refactorings from '../../../../../lib/refactorings/Refactorings';
 
+import { FALLBACK_TOOL_NAME } from '../../../../../lib/refactorings/providers/open-ai/OpenAIProvider';
+
 import OpenAIElementTemplatesProvider from '../../../../../lib/refactorings/providers/open-ai-element-emplates/OpenAIElementTemplatesProvider';
 
 import { toolNameToElementTemplateId } from '../../../../../lib/refactorings/providers/open-ai-element-emplates/util';
@@ -61,7 +63,7 @@ describe('OpenAIElementTemplatesProvider', function() {
 
       // then
       expect(tools).to.exist;
-      expect(tools).to.have.length(28);
+      expect(tools).to.have.length(29); // 28 tools plus fallback tool
     }));
 
 
@@ -75,6 +77,10 @@ describe('OpenAIElementTemplatesProvider', function() {
 
       // then
       tools.forEach(tool => {
+        if (tool.function.name === FALLBACK_TOOL_NAME) {
+          return;
+        }
+
         const elementTemplateId = toolNameToElementTemplateId(tool.function.name);
 
         const elementTemplate = elementTemplates.getLatest(elementTemplateId);
