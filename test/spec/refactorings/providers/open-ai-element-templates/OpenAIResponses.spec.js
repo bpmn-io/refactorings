@@ -293,11 +293,12 @@ const toolCalls = Object.entries(toolDescriptions).reduce((acc, [ elementTemplat
 
 
     /**
-     * GitHub not explicitly mentioned. We still expect to get the GitHub tool
+     * Name implies usage of git; expect GitHub and GitLab.
      * most of the time.
      */
     expectToolCalls('bpmn:Task', 'Update repo', [
-      toolCalls['GitHub.v1']
+      toolCalls['GitHub.v1'],
+      toolCalls['GitLab.v1']
     ], 80);
 
 
