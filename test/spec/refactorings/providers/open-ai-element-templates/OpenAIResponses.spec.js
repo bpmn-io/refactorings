@@ -314,11 +314,10 @@ const toolCalls = Object.entries(toolDescriptions).reduce((acc, [ elementTemplat
 
     /**
      * Pick one of the many message tools:
-     * Slack, Twilio, SendGrid, O365, AWS SNS, AWS SQS, SMS, Slack, Kafka, WhatsApp
+     * Slack, SendGrid, O365, AWS SNS, AWS SQS, SMS, Slack, Kafka, WhatsApp, MS Teams
      */
     expectToolCalls('bpmn:Task', 'Send a message', [
       toolCalls['Slack.v1'],
-      toolCalls['Twilio.v1'],
       toolCalls['SendGrid.v2'],
       toolCalls['MSFT.O365.Mail.v1'],
       toolCalls['AWSSNS.v1'],
@@ -326,7 +325,8 @@ const toolCalls = Object.entries(toolDescriptions).reduce((acc, [ elementTemplat
       toolCalls['Twilio.v1'],
       toolCalls['Slack.v1'],
       toolCalls['KAFKA.v1'],
-      toolCalls['WhatsApp.v1']
+      toolCalls['WhatsApp.v1'],
+      toolCalls['MSTeams.v1']
     ], 100);
 
 
@@ -340,12 +340,11 @@ const toolCalls = Object.entries(toolDescriptions).reduce((acc, [ elementTemplat
 
 
     /**
-     * Foul language.
+     * Offensive language. We expect no tool calls to be returned.
      */
-    expectToolCalls('bpmn:Task', 'Fuck Slack!', [
-      toolCalls['Slack.v1']
-    ], 40);
-
+    expectNoToolCalls('bpmn:Task', 'Fuck Slack!');
+    expectNoToolCalls('bpmn:Task', 'Get distance via Google Maps to the whore house.');
+    expectNoToolCalls('bpmn:Task', 'Schick eine Nachricht zu den Scheissern.');
   });
 
 
@@ -378,6 +377,7 @@ const toolCalls = Object.entries(toolDescriptions).reduce((acc, [ elementTemplat
    * returned which will be ignored.
    */
   describe('unrelated', function() {
+    expectNoToolCalls('bpmn:Task', 'S');
 
     expectNoToolCalls('bpmn:Task', 'Chop wood');
 
@@ -398,7 +398,6 @@ const toolCalls = Object.entries(toolDescriptions).reduce((acc, [ elementTemplat
 
 
     expectNoToolCalls('bpmn:Task', 'Are you calling me a clown?');
-
   });
 
 
