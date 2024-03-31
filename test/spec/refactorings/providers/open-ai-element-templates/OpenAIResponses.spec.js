@@ -31,6 +31,14 @@ const openai = new OpenAI({
 
 const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
 
+const toolDescriptions = require('../../../../../lib/refactorings/providers/open-ai-element-emplates/elementTemplateToolDescriptions.json');
+
+const toolCalls = Object.entries(toolDescriptions).reduce((acc, [ elementTemplateId, toolDescription ]) => {
+  const toolName = elementTemplateIdToToolName(elementTemplateId);
+  acc[elementTemplateId.replace(/io.camunda.connectors./, '')] = toolCall(toolName);
+  return acc;
+}, {});
+
 (testOpenai ? describe.only : describe.skip)('OpenAI responses (element templates)', function() {
 
   this.timeout(100000);
@@ -65,92 +73,92 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
     const expectedPercentage = 100;
 
     expectToolCalls('bpmn:Task', 'Update task in asana', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Asana.v1'))
+      toolCalls['Asana.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Create Asana task', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Asana.v1'))
+      toolCalls['Asana.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Scan document in Automation Anywhere', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.AutomationAnywhere'))
+      toolCalls['AutomationAnywhere']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Scan document using AA', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.AutomationAnywhere'))
+      toolCalls['AutomationAnywhere']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Update table in DynamoDB', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.AWSDynamoDB.v1'))
+      toolCalls['AWSDynamoDB.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Update table in AWS Dynamo', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.AWSDynamoDB.v1'))
+      toolCalls['AWSDynamoDB.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Publish EventBridge event', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.AWSEventBridge.v1'))
+      toolCalls['AWSEventBridge.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:BoundaryEvent', 'EventBridge event received', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.AWSEventBridge.boundary.v1'))
+      toolCalls['AWSEventBridge.boundary.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Call lambda function', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.AWSLAMBDA.v2'))
+      toolCalls['AWSLAMBDA.v2']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Create SNS topic for feature', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.AWSSNS.v1'))
+      toolCalls['AWSSNS.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:IntermediateCatchEvent', 'SNS notification received', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.inbound.AWSSNS.IntermediateCatchEvent.v1'))
+      toolCalls['inbound.AWSSNS.IntermediateCatchEvent.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Add to queue in blue prism', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.BluePrism.v1'))
+      toolCalls['BluePrism.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Create GitHub issue', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.GitHub.v1'))
+      toolCalls['GitHub.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:BoundaryEvent', 'GitHub event received', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.webhook.GithubWebhookConnectorBoundary.v1'))
+      toolCalls['webhook.GithubWebhookConnectorBoundary.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:IntermediateCatchEvent', 'GitHub event received', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.webhook.GithubWebhookConnectorIntermediate.v1'))
+      toolCalls['webhook.GithubWebhookConnectorIntermediate.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Create doc on Google Drive', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.GoogleDrive.v1'))
+      toolCalls['GoogleDrive.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Get distance via Google Maps', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.GoogleMapsPlatform.v1'))
+      toolCalls['GoogleMapsPlatform.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Add row to Google sheet', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.GoogleSheets.v1'))
+      toolCalls['GoogleSheets.v1']
     ], expectedPercentage);
 
 
@@ -160,77 +168,77 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
 
 
     expectToolCalls('bpmn:Task', 'Get customer data from REST API', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.HttpJson.v2'))
+      toolCalls['HttpJson.v2']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:BoundaryEvent', 'Poll customer updates', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.http.Polling.Boundary'))
+      toolCalls['http.Polling.Boundary']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Send event through Kafka', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.KAFKA.v1'))
+      toolCalls['KAFKA.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Send O365 mail', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.MSFT.O365.Mail.v1'))
+      toolCalls['MSFT.O365.Mail.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Get OpenAI chat completion', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.OpenAI.v1'))
+      toolCalls['OpenAI.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Get data from Operate', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.CamundaOperate.v1'))
+      toolCalls['CamundaOperate.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Update customer data in Salesforce', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Salesforce.v1'))
+      toolCalls['Salesforce.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Send mail using Sendgrid', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.SendGrid.v2'))
+      toolCalls['SendGrid.v2']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:BoundaryEvent', 'Slack notification received', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.inbound.Slack.BoundaryEvent.v1'))
+      toolCalls['inbound.Slack.BoundaryEvent.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:IntermediateCatchEvent', 'Slack notification received', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.inbound.Slack.IntermediateCatchEvent.v1'))
+      toolCalls['inbound.Slack.IntermediateCatchEvent.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Send Slack message to John', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Slack.v1'))
+      toolCalls['Slack.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Create Slack channel for topic', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Slack.v1'))
+      toolCalls['Slack.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'send a quick reminder via Twilio', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Twilio.v1'))
+      toolCalls['Twilio.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Send SMS using Twilio', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Twilio.v1'))
+      toolCalls['Twilio.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:BoundaryEvent', 'Webhook triggered', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.webhook.WebhookConnectorBoundary.v1'))
+      toolCalls['webhook.WebhookConnectorBoundary.v1']
     ], expectedPercentage);
 
   });
@@ -245,12 +253,12 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
     const expectedPercentage = 80;
 
     expectToolCalls('bpmn:Task', 'Asanaa task update', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Asana.v1'))
+      toolCalls['Asana.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Send Slak message to channel', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Slack.v1'))
+      toolCalls['Slack.v1']
     ], expectedPercentage);
 
   });
@@ -266,14 +274,14 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
      * of them all the time.
      */
     expectToolCalls('bpmn:StartEvent', 'Slack message received', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.inbound.Slack.MessageStartEvent.v1')),
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.inbound.Slack.StartEvent.v1'))
+      toolCalls['inbound.Slack.MessageStartEvent.v1'],
+      toolCalls['inbound.Slack.StartEvent.v1']
     ], 80);
 
 
     expectToolCalls('bpmn:StartEvent', 'Webhook received', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.webhook.WebhookConnector.v1')),
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.webhook.WebhookConnectorStartMessage.v1'))
+      toolCalls['webhook.WebhookConnector.v1'],
+      toolCalls['webhook.WebhookConnectorStartMessage.v1']
     ], 80);
 
 
@@ -282,7 +290,7 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
      * Automation Anywhere tool most of the time.
      */
     expectToolCalls('bpmn:Task', 'Add to queue items', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.AutomationAnywhere'))
+      toolCalls['AutomationAnywhere']
     ], 80);
 
 
@@ -291,26 +299,36 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
      * most of the time.
      */
     expectToolCalls('bpmn:Task', 'Update repo', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.GitHub.v1'))
+      toolCalls['GitHub.v1']
     ], 80);
 
 
     /**
-     * SendGrid not explicitly mentioned. We still expect to get the SendGrid
+     * Pick one of the email tools: SendGrid or O365.
      * tool most of the time.
      */
     expectToolCalls('bpmn:Task', 'Send email', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.SendGrid.v2'))
-    ], 80);
+      toolCalls['SendGrid.v2'],
+      toolCalls['MSFT.O365.Mail.v1']
+    ], 100);
 
 
     /**
-     * Slack not explicitly mentioned. We still expect to get the Slack tool
-     * most of the time.
+     * Pick one of the many message tools:
+     * Slack, Twilio, SendGrid, O365, AWS SNS, AWS SQS, SMS, Slack, Kafka, WhatsApp
      */
     expectToolCalls('bpmn:Task', 'Send a message', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Slack.v1'))
-    ], 80);
+      toolCalls['Slack.v1'],
+      toolCalls['Twilio.v1'],
+      toolCalls['SendGrid.v2'],
+      toolCalls['MSFT.O365.Mail.v1'],
+      toolCalls['AWSSNS.v1'],
+      toolCalls['AWSSQS.v1'],
+      toolCalls['Twilio.v1'],
+      toolCalls['Slack.v1'],
+      toolCalls['KAFKA.v1'],
+      toolCalls['WhatsApp.v1']
+    ], 100);
 
 
     /**
@@ -318,7 +336,7 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
      * of the time.
      */
     expectToolCalls('bpmn:Task', 'Send SMS to customer', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Twilio.v1'))
+      toolCalls['Twilio.v1']
     ], 80);
 
 
@@ -326,7 +344,7 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
      * Foul language.
      */
     expectToolCalls('bpmn:Task', 'Fuck Slack!', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Slack.v1'))
+      toolCalls['Slack.v1']
     ], 40);
 
   });
@@ -340,17 +358,17 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
     const expectedPercentage = 80;
 
     expectToolCalls('bpmn:Task', 'Slack Kanal zu Thema erstellen', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Slack.v1'))
+      toolCalls['Slack.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', 'Créer une chaîne Slack', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Slack.v1'))
+      toolCalls['Slack.v1']
     ], expectedPercentage);
 
 
     expectToolCalls('bpmn:Task', '创建 Slack 频道', [
-      toolCall(elementTemplateIdToToolName('io.camunda.connectors.Slack.v1'))
+      toolCalls['Slack.v1']
     ], expectedPercentage);
 
   });
