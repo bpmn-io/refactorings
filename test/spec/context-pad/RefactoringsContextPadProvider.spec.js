@@ -99,4 +99,31 @@ describe('Context Pad', function() {
     });
   }));
 
+
+  it('should toggle entry as active', inject(async function(elementRegistry, contextPad, popupMenu) {
+
+    // given
+    const task = elementRegistry.get('Task_1');
+
+    popupMenu.open = sinon.spy();
+
+    contextPad.open(task);
+
+    const suggestionEntry = domQuery('.entry.suggest-refactoring');
+    const replaceMenuEntry = domQuery('.entry[data-action="replace"]');
+
+    suggestionEntry.click();
+
+    // assume
+    expect([ ...suggestionEntry.classList ]).to.contain('active');
+
+    // when
+    replaceMenuEntry.click();
+
+    // then
+    waitFor(() => {
+      expect([ ...suggestionEntry.classList ]).not.to.contain('active');
+    });
+  }));
+
 });
