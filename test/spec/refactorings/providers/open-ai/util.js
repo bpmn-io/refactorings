@@ -1,50 +1,47 @@
 /**
  * @typedef { {
- *   name: string;
- *   arguments: Object;
- * } } ToolCall
+ *   execute: (elements: Element[]) => void;
+ *   id: string;
+ *   label: string;
+ * } } Refactoring
  */
-import { isDefined } from 'min-dash';
+import {
+  isDefined,
+  isNil
+} from 'min-dash';
 
 import { inject } from 'test/TestHelper';
 
-import { FALLBACK_TOOL_NAME } from '../../../../../lib/refactorings/providers/open-ai/OpenAIProvider';
 const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
 
-export function toolCall(name, args = {}) {
-  return {
-    name, arguments: args
-  };
-}
-
 /**
- * Expect tool calls for given element type and name. By default, 10 requests
- * will be sent to OpenAI of which 100% must return the expected tool calls.
+ * Expect refactorings for given element type and name. By default, 10 requests
+ * will be sent to OpenAI of which 100% must return the expected refactorings.
  *
  * @param {string} elementType Type of BPMN element
  * @param {string} elementName Name of BPMN element
- * @param {ToolCall[]} expected Expected tool names
+ * @param {Refactoring[]} expected Expected refactorings
  * @param {Object} [options] Options
- * @param {Function} [options.compareToolCalls] Custom comparison function
  * @param {number} [options.expectedPercentage=100] Percentage of requests that
  * must return expected
  * @param {number} [options.numberOfRequests=10] Number of requests to send,
- * defaults to process.env.TEST_OPENAI_REQUESTS or 10 tool calls
+ * defaults to process.env.OPENAI_TEST_REQUESTS or 10
  * @param {boolean} [options.only=false] Run only this test
  */
-export function expectToolCalls(elementType, elementName, expected, options = {}) {
+export function expectRefactorings(elementType, elementName, expected, options = {}) {
   let {
     expectedPercentage = 100,
-    numberOfRequests = 10,
-    only = false,
-    compareToolCalls = toolCallsEqual
+    numberOfRequests = null,
+    only = false
   } = options;
 
-  numberOfRequests = isDefined(process.env.TEST_OPENAI_REQUESTS) ? process.env.TEST_OPENAI_REQUESTS : numberOfRequests;
+  if (isNil(numberOfRequests)) {
+    numberOfRequests = isDefined(process.env.OPENAI_TEST_REQUESTS) ? process.env.OPENAI_TEST_REQUESTS : 10;
+  }
 
-  return describe(`tool calls for ${elementType} with name "${elementName}"`, function() {
+  return describe(`refactorings for ${elementType} with name "${elementName}"`, function() {
 
-    (testOpenai && only ? it.only : it)('should return expected tool calls', inject(async function(bpmnFactory, refactorings) {
+    (testOpenai && only ? it.only : it)('should return expected refactorings', inject(async function(bpmnFactory, refactorings) {
 
       // given
       const element = bpmnFactory.create(elementType, {
@@ -57,47 +54,46 @@ export function expectToolCalls(elementType, elementName, expected, options = {}
 
       const provider = providers[0];
 
-      const tools = provider.getTools(element);
-
       const promises = [];
 
       // when
+      console.log(`⏳ Sending ${ numberOfRequests } requests to OpenAI for ${ elementType } "${ elementName }"`);
+
       for (let i = 0; i < numberOfRequests; i++) {
-        promises.push(provider._openAIClient.getToolCalls(element, tools));
+        promises.push(provider.getRefactorings([ element ]));
       }
 
       const results = await Promise.all(promises);
 
       results.forEach((result, index) => {
-        const everyEqual = compareToolCalls(result, expected),
-              someEqual = compareToolCalls(result, expected, true);
+        const everyEqual = refactoringsEqual(result, expected),
+              someEqual = refactoringsEqual(result, expected, true);
 
         const state = everyEqual ? '✅' : someEqual ? '⚠️' : '❌';
 
-        console.log(`${ state } (${ index + 1 }/${ numberOfRequests }) Expected ${ formatToolCalls(expected) }, got ${ formatToolCalls(result) }`);
+        console.log(`${ state } (${ index + 1 }/${ numberOfRequests }) Expected ${ formatRefactorings(expected) }, got ${ formatRefactorings(result) }`);
       });
 
-      const actualPercentage = results.filter(result => compareToolCalls(result, expected, true)).length / numberOfRequests * 100;
+      const actualPercentage = results.filter(result => refactoringsEqual(result, expected, true)).length / numberOfRequests * 100;
 
       const failed = actualPercentage < expectedPercentage;
 
-      console.log(`${ failed ? '❌' : '✅' } ${ elementType } "${ elementName }" expects ${ formatToolCalls(expected) }${ failed ? ` but got ${ results.map(formatToolCalls).join(', ') }` : ''} (${ numberOfRequests } requests)`);
+      console.log(`${ failed ? '❌' : '✅' } ${ elementType } "${ elementName }" expects ${ formatRefactorings(expected) }${ failed ? ` but got ${ results.map(formatRefactorings).join(', ') }` : ''} (${ numberOfRequests } requests)`);
 
       expect(failed, `Expected ${ expectedPercentage }% of ${ numberOfRequests } requests to succeed, but ${ actualPercentage }% succeeded`).to.be.false;
     }));
   });
 }
 
-expectToolCalls.only = function(elementType, elementName, expected, options = {}) {
-  return expectToolCalls(elementType, elementName, expected, {
+expectRefactorings.only = function(elementType, elementName, expected, options = {}) {
+  return expectRefactorings(elementType, elementName, expected, {
     ...options,
     only: true
   });
 };
 
 /**
- * Expect no tool calls for given element type and name. No tool calls includes
- * the fallback tool call if no other tool call is returned.
+ * Expect no refactorings for given element type and name.
  *
  * @param {string} elementType Type of BPMN element
  * @param {string} elementName Name of BPMN element
@@ -105,78 +101,68 @@ expectToolCalls.only = function(elementType, elementName, expected, options = {}
  * @param {number} [options.expectedPercentage=100] Percentage of requests that
  * must return expected
  * @param {number} [options.numberOfRequests=10] Number of requests to send,
- * defaults to process.env.TEST_OPENAI_REQUESTS or 10 tool calls
+ * defaults to process.env.OPENAI_TEST_REQUESTS or 10
  * @param {boolean} [options.only=false] Run only this test
  */
-export function expectNoToolCalls(elementType, elementName, options = {}) {
-  return expectToolCalls(elementType, elementName, [], {
-    ...options,
-    compareToolCalls: (result, _) => !result.length || result.length === 1 && result[ 0 ].name === FALLBACK_TOOL_NAME
-  });
+export function expectNoRefactorings(elementType, elementName, options = {}) {
+  return expectRefactorings(elementType, elementName, [], options);
 }
 
-expectNoToolCalls.only = function(elementType, elementName, options = {}) {
-  return expectNoToolCalls(elementType, elementName, {
+expectNoRefactorings.only = function(elementType, elementName, options = {}) {
+  return expectNoRefactorings(elementType, elementName, {
     ...options,
     only: true
   });
 };
 
-function formatToolCalls(toolCalls) {
-  return `[ ${toolCalls.map(({
-    arguments: args = '{}', name
-  }) => `${name}(${formatToolArguments(args)})`).join(', ')} ]`;
-}
-
-function formatToolArguments(args = {}) {
-  if (!Object.keys(args).length) {
-    return '';
-  }
-
-  return Object.entries(args).map(([ key, value ]) => `${key}: ${value}`).join(', ');
+function formatRefactorings(refactorings) {
+  return `[ ${refactorings.map(({ id }) => id).join(', ')} ]`;
 }
 
 /**
- * Check whether tool calls are equal. Tool calls are equal if they have the
- * same name and arguments. The order of tool calls is not important.
+ * Check whether refactorings are equal. The order of refactorings is not
+ * important.
  *
- * @param {ToolCall[]} actualToolCalls
- * @param {ToolCall[]} expectedToolCalls
- * @param {boolean} [some=false] Whether tool calls are equal if some tool calls
- * are equal
+ * @param {Refactoring[]} actualRefactorings
+ * @param {Refactoring[]} expectedRefactorings
+ * @param {boolean} [some=false] Whether refactorings are equal if some
+ * refactorings are equal
  *
  * @returns {boolean}
  */
-function toolCallsEqual(actualToolCalls, expectedToolCalls, some = false) {
+function refactoringsEqual(actualRefactorings, expectedRefactorings, some = false) {
+  if (!actualRefactorings.length && !expectedRefactorings.length) {
+    return true;
+  }
+
   if (some) {
-    return actualToolCalls.some(actualToolCall => {
-      return expectedToolCalls.some(expectedToolCall => {
-        return toolCallEqual(actualToolCall, expectedToolCall);
+    return actualRefactorings.some(actualRefactoring => {
+      return expectedRefactorings.some(expectedRefactoring => {
+        return refactoringEqual(actualRefactoring, expectedRefactoring);
       });
     });
   }
 
-  if (actualToolCalls.length !== expectedToolCalls.length) {
+  if (actualRefactorings.length !== expectedRefactorings.length) {
     return false;
   }
 
-  return actualToolCalls.every(actualToolCall => {
-    return expectedToolCalls.some(expectedToolCall => {
-      return toolCallEqual(actualToolCall, expectedToolCall);
+  return actualRefactorings.every(actualRefactoring => {
+    return expectedRefactorings.some(expectedRefactoring => {
+      return refactoringEqual(actualRefactoring, expectedRefactoring);
     });
   });
 }
 
 /**
- * Check whether two tool calls are equal. Tool calls are equal if they have the
- * same name and arguments.
+ * Check whether two refactorings are equal. Refactorings are equal if they have
+ * the same ID.
  *
- * @param {ToolCall} actualToolCall
- * @param {ToolCall} expectedToolCall
+ * @param {Refactoring} actualRefactoring
+ * @param {Refactoring} expectedRefactoring
  *
  * @returns {boolean}
  */
-function toolCallEqual(actualToolCall, expectedToolCall) {
-  return actualToolCall.name === expectedToolCall.name
-    && JSON.stringify(actualToolCall.arguments) === JSON.stringify(expectedToolCall.arguments);
+function refactoringEqual(actualRefactoring, expectedRefactoring) {
+  return actualRefactoring.id === expectedRefactoring.id;
 }
