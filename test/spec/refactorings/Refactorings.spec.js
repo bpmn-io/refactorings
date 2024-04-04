@@ -8,7 +8,7 @@ import { CloudElementTemplatesCoreModule } from 'bpmn-js-element-templates';
 import RefactoringsModule from '../../../lib/refactorings';
 import Refactorings from '../../../lib/refactorings/Refactorings';
 
-import OpenAIElementTemplatesProvider from '../../../lib/refactorings/providers/open-ai-element-emplates/OpenAIElementTemplatesProvider';
+import OpenAIElementTemplatesProvider from '../../../lib/refactorings/providers/open-ai-element-templates/OpenAIElementTemplatesProvider';
 
 import FoobarProvider from './FoobarProvider';
 

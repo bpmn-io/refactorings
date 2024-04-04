@@ -5,13 +5,17 @@ export default class OpenAIFoobarProvider extends OpenAIProvider {
     super(config, eventBus, refactorings);
   }
 
-  execute() {}
-
-  getLabel() {
-    return 'Foobar';
+  _getRefactorings() {
+    return [
+      {
+        id: 'foobar',
+        label: 'Foobar',
+        execute: () => {}
+      }
+    ];
   }
 
-  getTools() {
+  _getTools() {
     return [
       {
         type: 'function',

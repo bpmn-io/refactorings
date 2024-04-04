@@ -1,0 +1,544 @@
+{
+  "asana_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Asana template for task whose name mentions Asana or has a name similar to Manage project, Create task, or Update task.",
+    "elementTemplates": [
+      "io.camunda.connectors.Asana.v1"
+    ]
+  },
+  "automationanywhere_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Automation Anywhere template for task whose name mentions Automation Anywhere or has a name similar to Queue item addition, Retrieve queue result.",
+    "elementTemplates": [
+      "io.camunda.connectors.AutomationAnywhere"
+    ]
+  },
+  "dynamodb_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses AWS DynamoDB template for task whose name mentions DynamoDB or has a name similar to CreateTable, ScanItems, or UpdateRecord.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSDynamoDB.v1"
+    ]
+  },
+  "amazoneventbridge_boundaryevent": {
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "description": "Uses Amazon EventBridge template for boundary event whose name mentions EventBridge or has a name similar to Event detected or Notification received.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSEventBridge.boundary.v1"
+    ]
+  },
+  "amazoneventbridge_intermediatecatchevent": {
+    "appliesTo": [
+      "bpmn:IntermediateCatchEvent",
+      "bpmn:IntermediateThrowEvent"
+    ],
+    "description": "Uses Amazon EventBridge template for intermediate event whose name mentions EventBridge or has a name similar to Catch event, Throw event.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSEventBridge.intermediate.v1"
+    ]
+  },
+  "amazoneventbridge_startevent": {
+    "appliesTo": [
+      "bpmn:StartEvent"
+    ],
+    "description": "Uses Amazon EventBridge template for start event whose name mentions EventBridge or has a name similar to Event received, New event detected, or Schedule triggered.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSEventBridge.MessageStart.v1",
+      "io.camunda.connectors.AWSEventBridge.startEvent.v1"
+    ]
+  },
+  "eventbridge_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Amazon EventBridge template for task whose name mentions EventBridge or has a name similar to Send event, Publish to bus, or Event notification.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSEventBridge.v1"
+    ]
+  },
+  "awslambda_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses AWS Lambda template for task whose name mentions AWS Lambda or has a name similar to Invoke function, Function execution, or Execute Lambda.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSLAMBDA.v2"
+    ]
+  },
+  "amazonsns_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Amazon SNS template for task whose name mentions SNS or has a name similar to Publish message, Notify subscribers, or Update topic.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSSNS.v1"
+    ]
+  },
+  "amazonsns_boundaryevent": {
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "description": "Uses Amazon SNS template for boundary event whose name mentions SNS or has a name similar to Notification received, Topic alert, or Message event.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.AWSSNS.Boundary.v1"
+    ]
+  },
+  "amazonsns_intermediateevent": {
+    "appliesTo": [
+      "bpmn:IntermediateCatchEvent",
+      "bpmn:IntermediateThrowEvent"
+    ],
+    "description": "Uses Amazon SNS template for intermediate catch or throw events whose name mentions SNS or has a name similar to SNS Notification or Message received.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.AWSSNS.IntermediateCatchEvent.v1"
+    ]
+  },
+  "amazonsns_startevent": {
+    "appliesTo": [
+      "bpmn:StartEvent"
+    ],
+    "description": "Uses Amazon SNS template for start event whose name mentions SNS or has a name similar to New notification, Notification received, or Topic subscribed.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.AWSSNS.MessageStartEvent.v1",
+      "io.camunda.connectors.inbound.AWSSNS.StartEvent.v1"
+    ]
+  },
+  "amazonsqs_boundaryevent": {
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "description": "Uses Amazon SQS Boundary Event template for boundary event whose name mentions SQS or has a name similar to Message available or Queue triggered.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSSQS.boundary.v1"
+    ]
+  },
+  "amazonsqs_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Amazon SQS template for task whose name mentions SQS or has a name similar to Send to queue or Queue message.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSSQS.v1"
+    ]
+  },
+  "amazonsqs_intermediatecatchevent": {
+    "appliesTo": [
+      "bpmn:IntermediateCatchEvent",
+      "bpmn:IntermediateThrowEvent"
+    ],
+    "description": "Uses Amazon SQS template for intermediate catch/throw event whose name mentions SQS or has a name similar to Message received or Queue message.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSSQS.intermediate.v1"
+    ]
+  },
+  "amazonsqs_startevent": {
+    "appliesTo": [
+      "bpmn:StartEvent"
+    ],
+    "description": "Uses Amazon SQS template for start event whose name mentions SQS or has a name similar to Receive message, Message arrived, Queue listener, or New message.",
+    "elementTemplates": [
+      "io.camunda.connectors.AWSSQS.StartEvent.v1",
+      "io.camunda.connectors.AWSSQS.startmessage.v1"
+    ]
+  },
+  "blueprism_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Blue Prism template for task whose name mentions Blue Prism or has a name similar to Queue item creation or Queue item retrieval.",
+    "elementTemplates": [
+      "io.camunda.connectors.BluePrism.v1"
+    ]
+  },
+  "easypost_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Easy Post template for task whose name mentions shipping or has a name similar to Create shipment, Verify address, or Track parcel.",
+    "elementTemplates": [
+      "io.camunda.connectors.EasyPost.v1"
+    ]
+  },
+  "github_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses GitHub template for task whose name mentions GitHub or has a name similar to Create issue, List branches, or Merge pull request.",
+    "elementTemplates": [
+      "io.camunda.connectors.GitHub.v1"
+    ]
+  },
+  "github_boundaryevent": {
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "description": "Uses GitHub Webhook template for boundary event whose name mentions GitHub or has a name similar to Issue comment, Repository push, or Pull request.",
+    "elementTemplates": [
+      "io.camunda.connectors.webhook.GithubWebhookConnectorBoundary.v1"
+    ]
+  },
+  "github_intermediatecatchevent": {
+    "appliesTo": [
+      "bpmn:IntermediateCatchEvent",
+      "bpmn:IntermediateThrowEvent"
+    ],
+    "description": "Uses GitHub Webhook template for intermediate catch or throw event whose name mentions GitHub or has a name similar to Event received or New notification.",
+    "elementTemplates": [
+      "io.camunda.connectors.webhook.GithubWebhookConnectorIntermediate.v1"
+    ]
+  },
+  "github_startevent": {
+    "appliesTo": [
+      "bpmn:StartEvent"
+    ],
+    "description": "Uses GitHub Webhook template for start event whose name mentions GitHub or has a name similar to Webhook received, Issue opened, or Pull request merged.",
+    "elementTemplates": [
+      "io.camunda.connectors.webhook.GithubWebhookConnector.v1",
+      "io.camunda.connectors.webhook.GithubWebhookConnectorMessageStart.v1"
+    ]
+  },
+  "gitlab_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses GitLab template for task whose name mentions GitLab or has a name similar to Manage issue, Release notes, or Issue comment.",
+    "elementTemplates": [
+      "io.camunda.connectors.GitLab.v1"
+    ]
+  },
+  "googledrive_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Google Drive template for task whose name mentions Google Drive or has a name similar to Create folder or Create file.",
+    "elementTemplates": [
+      "io.camunda.connectors.GoogleDrive.v1"
+    ]
+  },
+  "googlemaps_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Google Maps Platform template for task whose name mentions Maps or has a name similar to Address validation, Place finder, or Distance calculator.",
+    "elementTemplates": [
+      "io.camunda.connectors.GoogleMapsPlatform.v1"
+    ]
+  },
+  "googlesheets_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Google Sheets template for task whose name mentions Google Sheets or has a name similar to Create spreadsheet, Add values, or Update cell.",
+    "elementTemplates": [
+      "io.camunda.connectors.GoogleSheets.v1"
+    ]
+  },
+  "graphql_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses GraphQL template for task whose name mentions GraphQL or has a name similar to Execute query, Run mutation, or Fetch data.",
+    "elementTemplates": [
+      "io.camunda.connectors.GraphQL.v1"
+    ]
+  },
+  "rest_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses REST template for task whose name mentions REST or has a name similar to Fetch data, Get customer info, or Update record.",
+    "elementTemplates": [
+      "io.camunda.connectors.HttpJson.v2"
+    ]
+  },
+  "httppolling_boundaryevent": {
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "description": "Uses HTTP Polling template for boundary event whose name mentions polling or has a name similar to Periodic Check or Interval Trigger.",
+    "elementTemplates": [
+      "io.camunda.connectors.http.Polling.Boundary"
+    ]
+  },
+  "httppolling_intermediatecatchevent": {
+    "appliesTo": [
+      "bpmn:IntermediateCatchEvent",
+      "bpmn:IntermediateThrowEvent"
+    ],
+    "description": "Uses HTTP Polling template for intermediate catch event whose name mentions Polling or has a name similar to Periodic check or Data fetch.",
+    "elementTemplates": [
+      "io.camunda.connectors.http.Polling"
+    ]
+  },
+  "kafka_startevent": {
+    "appliesTo": [
+      "bpmn:StartEvent"
+    ],
+    "description": "Uses Kafka template for start event whose name mentions Kafka or has a name similar to Message consumed, Topic listener, or Topic event.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.KAFKA.v1",
+      "io.camunda.connectors.inbound.KafkaMessageStart.v1"
+    ]
+  },
+  "kafka_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Kafka template for task whose name mentions Kafka or has a name similar to Produce message or Send event.",
+    "elementTemplates": [
+      "io.camunda.connectors.KAFKA.v1"
+    ]
+  },
+  "kafka_boundaryevent": {
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "description": "Uses Kafka template for boundary event whose name mentions Kafka or has a name similar to Message Consumed or Topic Listener.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.KafkaBoundary.v1"
+    ]
+  },
+  "kafka_intermediatecatchevent": {
+    "appliesTo": [
+      "bpmn:IntermediateCatchEvent",
+      "bpmn:IntermediateThrowEvent"
+    ],
+    "description": "Uses Kafka template for intermediate catch or throw event whose name mentions Kafka or has a name similar to Message consumed or Event received.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.KafkaIntermediate.v1"
+    ]
+  },
+  "microsoftoffice365mail_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Microsoft Office 365 Mail template for task whose name mentions Mail or has a name similar to Send Email or Check Inbox.",
+    "elementTemplates": [
+      "io.camunda.connectors.MSFT.O365.Mail.v1"
+    ]
+  },
+  "microsoftteams_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Microsoft Teams template for task whose name mentions Teams or has a name similar to Send message or Update channel.",
+    "elementTemplates": [
+      "io.camunda.connectors.MSTeams.v1"
+    ]
+  },
+  "openai_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses OpenAI template for task whose name mentions OpenAI or has a name similar to Chat generation, Moderate content.",
+    "elementTemplates": [
+      "io.camunda.connectors.OpenAI.v1"
+    ]
+  },
+  "camundaoperate_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Camunda Operate template for task whose name mentions Camunda Operate or has a name similar to Fetch Data, Get Incident, or Retrieve Variables.",
+    "elementTemplates": [
+      "io.camunda.connectors.CamundaOperate.v1"
+    ]
+  },
+  "rabbitmq_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses RabbitMQ template for task whose name mentions RabbitMQ or has a name similar to Send message, Publish event, or Queue data.",
+    "elementTemplates": [
+      "io.camunda.connectors.RabbitMQ.v1"
+    ]
+  },
+  "rabbitmq_boundaryevent": {
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "description": "Uses RabbitMQ template for boundary event whose name mentions RabbitMQ or has a name similar to Message arrived or Queue event.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.RabbitMQ.Boundary.v1"
+    ]
+  },
+  "rabbitmq_intermediatecatchevent": {
+    "appliesTo": [
+      "bpmn:IntermediateCatchEvent",
+      "bpmn:IntermediateThrowEvent"
+    ],
+    "description": "Uses RabbitMQ template for intermediate event whose name mentions RabbitMQ or has a name similar to Message received or Event triggered.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.RabbitMQ.Intermediate.v1"
+    ]
+  },
+  "rabbitmq_startevent": {
+    "appliesTo": [
+      "bpmn:StartEvent"
+    ],
+    "description": "Uses RabbitMQ template for start event whose name mentions RabbitMQ or has a name similar to Message received, Queue message, or Event received.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.RabbitMQ.MessageStart.v1",
+      "io.camunda.connectors.inbound.RabbitMQ.StartEvent.v1"
+    ]
+  },
+  "salesforce_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Salesforce template for task whose name mentions Salesforce or has a name similar to Update Account, Create Contact, or Run SOQL.",
+    "elementTemplates": [
+      "io.camunda.connectors.Salesforce.v1"
+    ]
+  },
+  "sendgrid_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses SendGrid template for task whose name mentions SendGrid or has a name similar to Send Email or Email Dispatch.",
+    "elementTemplates": [
+      "io.camunda.connectors.SendGrid.v2"
+    ]
+  },
+  "slack_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Slack template for task whose name mentions Slack or has a name similar to Post message, Create channel, or Invite to channel.",
+    "elementTemplates": [
+      "io.camunda.connectors.Slack.v1"
+    ]
+  },
+  "slack_boundaryevent": {
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "description": "Uses Slack Webhook template for boundary event whose name mentions Slack or has a name similar to Notification received or Message alert.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.Slack.BoundaryEvent.v1"
+    ]
+  },
+  "slack_intermediatecatchevent": {
+    "appliesTo": [
+      "bpmn:IntermediateCatchEvent",
+      "bpmn:IntermediateThrowEvent"
+    ],
+    "description": "Uses Slack Webhook template for intermediate catch event whose name mentions Slack or has a name similar to Message received, Event notification.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.Slack.IntermediateCatchEvent.v1"
+    ]
+  },
+  "slack_startevent": {
+    "appliesTo": [
+      "bpmn:StartEvent"
+    ],
+    "description": "Uses a Slack template for the start event whose name mentions Slack or has a name similar to Message Arrived, Message Received, or New Notification.",
+    "elementTemplates": [
+      "io.camunda.connectors.inbound.Slack.MessageStartEvent.v1",
+      "io.camunda.connectors.inbound.Slack.StartEvent.v1"
+    ]
+  },
+  "twilio_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses Twilio template for task whose name mentions Twilio or has a name similar to Send SMS, Get message, or List messages.",
+    "elementTemplates": [
+      "io.camunda.connectors.Twilio.v1"
+    ]
+  },
+  "twilio_boundaryevent": {
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "description": "Uses Twilio template for boundary event whose name mentions Twilio or has a name similar to SMS received or Call notification.",
+    "elementTemplates": [
+      "io.camunda.connectors.Twilio.Webhook.Boundary.v1"
+    ]
+  },
+  "twilio_intermediatecatchevent": {
+    "appliesTo": [
+      "bpmn:IntermediateCatchEvent",
+      "bpmn:IntermediateThrowEvent"
+    ],
+    "description": "Uses Twilio template for intermediate catch or throw event whose name mentions Twilio or has a name similar to SMS received or Call notification.",
+    "elementTemplates": [
+      "io.camunda.connectors.Twilio.Webhook.Intermediate.v1"
+    ]
+  },
+  "twilio_startevent": {
+    "appliesTo": [
+      "bpmn:StartEvent"
+    ],
+    "description": "Uses Twilio template for start event whose name mentions Twilio or has a name similar to SMS Received, Call Initiated, or Message Received.",
+    "elementTemplates": [
+      "io.camunda.connectors.TwilioWebhook.v1",
+      "io.camunda.connectors.TwilioWebhookMessageStart.v1"
+    ]
+  },
+  "uipath_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses UiPath template for task whose name mentions UiPath or has a name similar to Add queue item or Get queue item result.",
+    "elementTemplates": [
+      "io.camunda.connectors.UIPath.v1"
+    ]
+  },
+  "webhook_boundaryevent": {
+    "appliesTo": [
+      "bpmn:BoundaryEvent"
+    ],
+    "description": "Uses Webhook template for boundary event whose name mentions Webhook or has a name similar to Callback listener, Event received, or External notification.",
+    "elementTemplates": [
+      "io.camunda.connectors.webhook.WebhookConnectorBoundary.v1"
+    ]
+  },
+  "webhook_intermediatecatchevent": {
+    "appliesTo": [
+      "bpmn:IntermediateCatchEvent",
+      "bpmn:IntermediateThrowEvent"
+    ],
+    "description": "Uses Webhook template for intermediate event whose name mentions Webhook or has a name similar to Callback received or Event notification.",
+    "elementTemplates": [
+      "io.camunda.connectors.webhook.WebhookConnectorIntermediate.v1"
+    ]
+  },
+  "webhook_startevent": {
+    "appliesTo": [
+      "bpmn:StartEvent"
+    ],
+    "description": "Uses Webhook template for start event whose name mentions Webhook or has a name similar to Callback received, Event triggered, or Hook activated.",
+    "elementTemplates": [
+      "io.camunda.connectors.webhook.WebhookConnector.v1",
+      "io.camunda.connectors.webhook.WebhookConnectorStartMessage.v1"
+    ]
+  },
+  "whatsappbusiness_task": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses WhatsApp Business template for task whose name mentions WhatsApp or has a name similar to Send text or Notify customer.",
+    "elementTemplates": [
+      "io.camunda.connectors.WhatsApp.v1"
+    ]
+  },
+  "custom_sendemail": {
+    "appliesTo": [
+      "bpmn:Task"
+    ],
+    "description": "Uses template for task whose name does _not_ mention any particular service and explicitly mentions sending an email (not message or notification).",
+    "elementTemplates": [
+      "io.camunda.connectors.MSFT.O365.Mail.v1",
+      "io.camunda.connectors.SendGrid.v2"
+    ]
+  }
+}

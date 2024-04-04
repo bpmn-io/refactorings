@@ -19,7 +19,7 @@ describe('OpenAIProvider', function() {
           'openAIFoobarProvider',
         ],
         refactorings: [ 'type', Refactorings ],
-        openAIFoobarProvider: [ 'type', OpenAIFoobarProvider ],
+        openAIFoobarProvider: [ 'type', OpenAIFoobarProvider ]
       }
     ],
     refactorings: {

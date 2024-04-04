@@ -5,20 +5,22 @@ Refactorings for bpmn-js, powered by AI!
 ## Setup
 
 ```bash
-echo 'OPENAI_API_KEY="YOUR_OPENAI_API_KEY"' > .env
 npm install
 npm start
 ```
 
-### Optional
+### OpenAI Setup
 
-The number of OpenAI requests to run per test defaults to 10.
-You can change this by setting the `TEST_OPENAI_REQUESTS` environment variable
-for faster/cheaper tests, e.g. while developing:
+To use OpenAI, you need to create an account and get an API key. Set the API key in the `.env` file:
 
 ```bash
-echo 'OPENAI_API_KEY="YOUR_OPENAI_API_KEY"' > .env
-echo 'TEST_OPENAI_REQUESTS=1' >> .env
+OPENAI_API_KEY="..."
+```
+
+To set the number of reqests sent for each test, set `OPENAI_TEST_REQUESTS` in the `.env` file:
+
+```bash
+OPENAI_TEST_REQUESTS=3
 ```
 
 ## Testing
@@ -31,21 +33,6 @@ npm test
 
 # run OpenAI tests
 npm run test:openai
-```
-
-## Updating Element Templates
-
-Update the [tool descriptions](https://platform.openai.com/docs/api-reference/assistants/createAssistant#assistants-createassistant-tools) used for refactorings powered by OpenAI:
-
-```bash
-# fetch latest element templates from camunda/web-modeler repository
-npm run fetch-element-templates
-
-# create tool descriptions
-npm run create-element-template-tool-descriptions
-
-# or create tool descriptions using OpenAI
-npm run create-element-template-tool-descriptions:openai
 ```
 
 ## License
