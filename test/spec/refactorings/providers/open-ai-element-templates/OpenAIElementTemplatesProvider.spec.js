@@ -7,6 +7,8 @@ import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
 
 import { CloudElementTemplatesCoreModule } from 'bpmn-js-element-templates';
 
+import ZeebeModdle from 'zeebe-bpmn-moddle/resources/zeebe.json';
+
 import Refactorings from '../../../../../lib/refactorings/Refactorings';
 
 import { FALLBACK_TOOL_NAME } from '../../../../../lib/refactorings/providers/open-ai/OpenAIProvider';
@@ -36,6 +38,9 @@ describe('OpenAIElementTemplatesProvider', function() {
         openAIElementTemplatesProvider: [ 'type', OpenAIElementTemplatesProvider ]
       }
     ],
+    moddleExtensions: {
+      zeebe: ZeebeModdle
+    },
     refactorings: {
       openai: {
         createChatCompletion: () => ({
@@ -249,6 +254,39 @@ describe('OpenAIElementTemplatesProvider', function() {
       expect(refactorings[0].label).to.equal('Apply Slack Outbound Connector template');
       expect(refactorings[1].label).to.equal('Apply Twilio Outbound Connector template');
       expect(refactorings[2].label).to.equal('Apply WhatsApp Business Outbound Connector template');
+    }));
+
+  });
+
+
+  describe('events', function() {
+
+    it('should fire event when executing refactoring', inject(function(elementRegistry, eventBus, openAIElementTemplatesProvider) {
+
+      // given
+      const element = elementRegistry.get('Task_1');
+
+      const toolCalls = [
+        {
+          name: 'slack_task',
+          arguments: {}
+        }
+      ];
+
+      const refactorings = openAIElementTemplatesProvider._getRefactorings(element, toolCalls);
+
+      expect(refactorings).to.exist;
+      expect(refactorings).to.have.length(1);
+
+      const spy = sinon.spy();
+
+      eventBus.on('refactorings.execute', spy);
+
+      // when
+      refactorings[0].execute([ element ]);
+
+      // then
+      expect(spy).to.have.been.calledOnce;
     }));
 
   });
