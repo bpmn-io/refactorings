@@ -6,6 +6,10 @@ All notable changes to [@bpmn-io/refactorings](https://github.com/bpmn-io/refact
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.2.1
+
+* `FIX`: remove unused `@bpmn-io/properties-panel` peer dependency ([#25](https://github.com/bpmn-io/refactorings/pull/25))
+
 ## 0.2.0
 
 * `FEAT`: refactor OpenAI provider ([#22](https://github.com/bpmn-io/refactorings/pull/22))
