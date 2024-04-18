@@ -37,7 +37,7 @@
     "dev:openai": "cross-env TEST_OPENAI=true npm test -- --auto-watch --no-single-run",
     "start": "cross-env SINGLE_START=true npm run dev",
     "build": "rollup -c --bundleConfigAsCjs",
-    "build:watch": "rollup -cw",
+    "build:watch": "rollup -cw --bundleConfigAsCjs",
     "create-element-template-tool-descriptions": "node ./scripts/create-element-template-tool-descriptions.js",
     "create-element-template-tool-descriptions:openai": "cross-env USE_OPENAI=true node ./scripts/create-element-template-tool-descriptions.js",
     "fetch-element-templates": "node ./scripts/fetch-element-templates.js",
