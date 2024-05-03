@@ -1,6 +1,6 @@
 {
   "name": "@bpmn-io/refactorings",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Refactorings feature for bpmn-js",
   "author": {
     "name": "Philipp Fromme",
