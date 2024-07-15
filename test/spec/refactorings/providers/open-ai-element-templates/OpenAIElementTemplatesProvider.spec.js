@@ -3,8 +3,6 @@ import {
   inject
 } from 'test/TestHelper';
 
-import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
-
 import { CloudElementTemplatesCoreModule } from 'bpmn-js-element-templates';
 
 import ZeebeModdle from 'zeebe-bpmn-moddle/resources/zeebe.json';
@@ -13,9 +11,9 @@ import Refactorings from '../../../../../lib/refactorings/Refactorings';
 
 import { FALLBACK_TOOL_NAME } from '../../../../../lib/refactorings/providers/open-ai/OpenAIProvider';
 
-import OpenAIElementTemplatesProvider from '../../../../../lib/refactorings/providers/open-ai-element-templates/OpenAIElementTemplatesProvider';
-
-import elementTemplateToolDescriptions from '../../../../../lib/refactorings/providers/open-ai-element-templates/elementTemplateToolDescriptions.json';
+import OpenAIElementTemplatesProvider, {
+  idToToolName
+} from '../../../../../lib/refactorings/providers/open-ai-element-templates/OpenAIElementTemplatesProvider';
 
 import ElementTemplatesErrorLogger from '../../../ElementTemplatesErrorLogger';
 
@@ -90,62 +88,91 @@ describe('OpenAIElementTemplatesProvider', function() {
     }));
 
 
-    it('should ony get tools for applicable element templates', inject(function(elementRegistry, openAIElementTemplatesProvider) {
+    it('should get tools for all Connector element templates available at runtime', inject(
+      function(elementRegistry, elementTemplates, openAIElementTemplatesProvider) {
 
-      // given
-      const element = elementRegistry.get('Task_1');
+        // given
+        const fooTemplate = {
+          id: 'foo.template',
+          appliesTo: [ 'bpmn:Task' ],
+          description: 'foo',
+          properties: [],
+          category: {
+            id: 'connectors',
+            name: 'Connectors'
+          }
+        };
 
-      // when
-      const tools = openAIElementTemplatesProvider._getTools(element);
+        const barTemplate = {
+          id: 'bar.template',
+          appliesTo: [ 'bpmn:Task' ],
+          description: 'bar',
+          properties: []
+        };
 
-      // then
-      expect(tools).to.exist;
-      expect(tools).to.have.length.above(0);
+        elementTemplates.set([
+          ...elementTemplates.getAll(),
+          fooTemplate,
+          barTemplate
+        ]);
 
-      tools
-        .filter(tool => tool.function.name !== FALLBACK_TOOL_NAME)
-        .forEach(tool => {
-          const toolDescription = elementTemplateToolDescriptions[ tool.function.name ];
+        const element = elementRegistry.get('Task_1');
 
-          expect(toolDescription).to.exist;
+        // when
+        const tools = openAIElementTemplatesProvider._getTools(element);
 
-          expect(toolDescription.appliesTo.includes(getBusinessObject(element).$type)).to.be.true;
-        });
-    }));
+        // then
+        expect(tools).to.exist;
+        expect(tools).to.have.length.above(0);
+
+        const fooTool = tools.find(tool => tool.function.name === 'foo_template');
+
+        expect(fooTool).to.exist;
+
+        const barTool = tools.find(tool => tool.function.name === 'bar_template');
+
+        expect(barTool).not.to.exist;
+      }
+    ));
 
 
-    it('should not get tools for deprecated element templates', inject(function(elementRegistry, elementTemplates, openAIElementTemplatesProvider) {
+    it('should not get tools (element template deprecated)', inject(
+      function(elementRegistry, elementTemplates, openAIElementTemplatesProvider) {
 
-      // given
-      const element = elementRegistry.get('Task_1');
+        // given
+        const fooTemplate = {
+          id: 'foo.template',
+          appliesTo: [ 'bpmn:Task' ],
+          description: 'foo',
+          properties: [],
+          category: {
+            id: 'connectors',
+            name: 'Connectors'
+          },
+          deprecated: {
+            message: 'foo'
+          }
+        };
 
-      // when
-      const tools = openAIElementTemplatesProvider._getTools(element);
+        elementTemplates.set([
+          ...elementTemplates.getAll(),
+          fooTemplate
+        ]);
 
-      // then
-      expect(tools).to.exist;
-      expect(tools).to.have.length.above(0);
+        const element = elementRegistry.get('Task_1');
 
-      tools
-        .filter(tool => tool.function.name !== FALLBACK_TOOL_NAME)
-        .forEach(tool => {
-          const toolDescription = elementTemplateToolDescriptions[ tool.function.name ];
+        // when
+        const tools = openAIElementTemplatesProvider._getTools(element);
 
-          expect(toolDescription).to.exist;
+        // then
+        expect(tools).to.exist;
+        expect(tools).to.have.length.above(0);
 
-          toolDescription.elementTemplates.forEach(elementTemplateId => {
-            const latestElementTemplates = elementTemplates.getLatest(elementTemplateId);
+        const fooTool = tools.find(tool => tool.function.name === 'foo_template');
 
-            expect(latestElementTemplates).to.exist;
-            expect(latestElementTemplates).to.have.length.above(0);
-
-            const [ latestElementTemplate ] = latestElementTemplates;
-
-            expect(latestElementTemplate).to.exist;
-            expect(latestElementTemplate.deprecated).not.to.exist;
-          });
-        });
-    }));
+        expect(fooTool).not.to.exist;
+      }
+    ));
 
 
     it('should get no tools (no applicable element template)', inject(function(elementRegistry, openAIElementTemplatesProvider) {
@@ -174,15 +201,15 @@ describe('OpenAIElementTemplatesProvider', function() {
 
       const toolCalls = [
         {
-          name: 'slack_task',
+          name: idToToolName('io.camunda.connectors.Asana.v1'),
           arguments: {}
         },
         {
-          name: 'twilio_task',
+          name: idToToolName('io.camunda.connectors.AutomationAnywhere'),
           arguments: {}
         },
         {
-          name: 'whatsappbusiness_task',
+          name: idToToolName('io.camunda.connectors.AWSDynamoDB.v1'),
           arguments: {}
         }
       ];
@@ -203,15 +230,15 @@ describe('OpenAIElementTemplatesProvider', function() {
 
       const toolCalls = [
         {
-          name: 'slack_task',
+          name: idToToolName('io.camunda.connectors.Asana.v1'),
           arguments: {}
         },
         {
-          name: 'twilio_task',
+          name: idToToolName('io.camunda.connectors.AutomationAnywhere'),
           arguments: {}
         },
         {
-          name: 'twilio_task',
+          name: idToToolName('io.camunda.connectors.AutomationAnywhere'),
           arguments: {}
         }
       ];
@@ -232,15 +259,15 @@ describe('OpenAIElementTemplatesProvider', function() {
 
       const toolCalls = [
         {
-          name: 'slack_task',
+          name: idToToolName('io.camunda.connectors.Asana.v1'),
           arguments: {}
         },
         {
-          name: 'whatsappbusiness_task',
+          name: idToToolName('io.camunda.connectors.AWSDynamoDB.v1'),
           arguments: {}
         },
         {
-          name: 'twilio_task',
+          name: idToToolName('io.camunda.connectors.AutomationAnywhere'),
           arguments: {}
         }
       ];
@@ -251,9 +278,9 @@ describe('OpenAIElementTemplatesProvider', function() {
       // then
       expect(refactorings).to.exist;
       expect(refactorings).to.have.length(3);
-      expect(refactorings[0].label).to.equal('Apply Slack Outbound Connector template');
-      expect(refactorings[1].label).to.equal('Apply Twilio Outbound Connector template');
-      expect(refactorings[2].label).to.equal('Apply WhatsApp Business Outbound Connector template');
+      expect(refactorings[0].label).to.equal('Apply Asana Outbound Connector template');
+      expect(refactorings[1].label).to.equal('Apply Automation Anywhere Outbound Connector template');
+      expect(refactorings[2].label).to.equal('Apply AWS DynamoDB Outbound Connector template');
     }));
 
   });
@@ -268,7 +295,7 @@ describe('OpenAIElementTemplatesProvider', function() {
 
       const toolCalls = [
         {
-          name: 'slack_task',
+          name: idToToolName('io.camunda.connectors.Asana.v1'),
           arguments: {}
         }
       ];

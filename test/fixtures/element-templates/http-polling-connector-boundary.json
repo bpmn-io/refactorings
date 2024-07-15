@@ -144,7 +144,7 @@
         "constraints": {
           "notEmpty": true,
           "pattern": {
-            "value": "^(=|https?://|secrets\\..+|\\{\\{secrets\\..+\\}\\}).*$",
+            "value": "^(=|(https?://|secrets\\..+|\\{\\{secrets\\..+\\}\\}).*$)",
             "message": "must be a http(s) URL"
           }
         }
@@ -308,7 +308,7 @@
       },
       {
         "label": "Client authentication",
-        "id": "authenticationType",
+        "id": "authentication.clientAuthentication",
         "group": "authentication",
         "description": "Send client ID and client secret as Basic Auth request in the header, or as client credentials in the request body",
         "value": "basicAuthHeader",
@@ -441,7 +441,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.+|[0-9]+|secrets\\..+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|secrets\\..+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "must be a timeout in seconds (default value is 20 seconds) or a FEEL expression"
           }
         }

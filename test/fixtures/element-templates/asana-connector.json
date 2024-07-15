@@ -29,10 +29,6 @@
         "label": "Authentication"
       },
       {
-        "id": "operation",
-        "label": "Operation"
-      },
-      {
         "id": "output",
         "label": "Output"
       },
@@ -101,7 +97,7 @@
       },
       {
         "label": "Operation",
-        "id": "operation",
+        "id": "taskOperation",
         "group": "operation",
         "description": "Choose operation to perform",
         "type": "Dropdown",
@@ -134,7 +130,7 @@
       },
       {
         "label": "Operation",
-        "id": "operation",
+        "id": "projectOperation",
         "group": "operation",
         "description": "Choose operation to perform",
         "type": "Dropdown",
@@ -173,10 +169,23 @@
           "name": "method"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTasksFromProject",
-            "getTaskById",
+            "getTaskById"
+          ]
+        }
+      },
+      {
+        "type": "Hidden",
+        "value": "get",
+        "binding": {
+          "type": "zeebe:input",
+          "name": "method"
+        },
+        "condition": {
+          "property": "projectOperation",
+          "oneOf": [
             "getProjects",
             "getProjectById"
           ]
@@ -190,9 +199,22 @@
           "name": "method"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
-            "createTask",
+            "createTask"
+          ]
+        }
+      },
+      {
+        "type": "Hidden",
+        "value": "post",
+        "binding": {
+          "type": "zeebe:input",
+          "name": "method"
+        },
+        "condition": {
+          "property": "projectOperation",
+          "oneOf": [
             "createProject"
           ]
         }
@@ -205,9 +227,22 @@
           "name": "method"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
-            "deleteTask",
+            "deleteTask"
+          ]
+        }
+      },
+      {
+        "type": "Hidden",
+        "value": "delete",
+        "binding": {
+          "type": "zeebe:input",
+          "name": "method"
+        },
+        "condition": {
+          "property": "projectOperation",
+          "oneOf": [
             "deleteProject"
           ]
         }
@@ -226,7 +261,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTasksFromProject"
           ]
@@ -240,7 +275,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTasksFromProject"
           ]
@@ -254,7 +289,7 @@
           "name": "queryParameters"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTasksFromProject"
           ]
@@ -274,7 +309,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTaskById"
           ]
@@ -288,7 +323,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTaskById"
           ]
@@ -308,7 +343,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "deleteTask"
           ]
@@ -322,7 +357,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "deleteTask"
           ]
@@ -342,7 +377,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -362,7 +397,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -380,7 +415,7 @@
           "name": "parentTaskId"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -398,7 +433,7 @@
           "name": "taskNotes"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -412,7 +447,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -426,7 +461,7 @@
           "name": "body"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -444,7 +479,7 @@
           "name": "workspaceId"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjects"
           ]
@@ -462,7 +497,7 @@
           "name": "teamId"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjects"
           ]
@@ -476,7 +511,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjects"
           ]
@@ -490,7 +525,7 @@
           "name": "queryParameters"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjects"
           ]
@@ -510,7 +545,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjectById"
           ]
@@ -524,7 +559,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjectById"
           ]
@@ -544,7 +579,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "createProjectInWorkspace"
           ]
@@ -564,7 +599,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "createProjectInWorkspace"
           ]
@@ -582,7 +617,7 @@
           "name": "projectNote"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "createProjectInWorkspace"
           ]
@@ -596,7 +631,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "createProjectInWorkspace"
           ]
@@ -610,7 +645,7 @@
           "name": "body"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "createProjectInWorkspace"
           ]
@@ -630,7 +665,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "deleteProject"
           ]
@@ -644,7 +679,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "deleteProject"
           ]
@@ -681,7 +716,7 @@
       },
       {
         "label": "Error expression",
-        "description": "Expression to handle errors. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/#bpmn-errors\" target=\"_blank\">documentation</a>",
+        "description": "Expression to handle errors. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/\" target=\"_blank\">documentation</a>",
         "group": "errors",
         "type": "Text",
         "feel": "required",
@@ -722,10 +757,6 @@
         "label": "Authentication"
       },
       {
-        "id": "operation",
-        "label": "Operation"
-      },
-      {
         "id": "output",
         "label": "Output"
       },
@@ -794,7 +825,7 @@
       },
       {
         "label": "Operation",
-        "id": "operation",
+        "id": "taskOperation",
         "group": "operation",
         "description": "Choose operation to perform",
         "type": "Dropdown",
@@ -827,7 +858,7 @@
       },
       {
         "label": "Operation",
-        "id": "operation",
+        "id": "projectOperation",
         "group": "operation",
         "description": "Choose operation to perform",
         "type": "Dropdown",
@@ -866,10 +897,23 @@
           "name": "method"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTasksFromProject",
-            "getTaskById",
+            "getTaskById"
+          ]
+        }
+      },
+      {
+        "type": "Hidden",
+        "value": "get",
+        "binding": {
+          "type": "zeebe:input",
+          "name": "method"
+        },
+        "condition": {
+          "property": "projectOperation",
+          "oneOf": [
             "getProjects",
             "getProjectById"
           ]
@@ -883,9 +927,22 @@
           "name": "method"
         },
         "condition": {
+          "property": "taskOperation",
+          "oneOf": [
+            "createTask"
+          ]
+        }
+      },
+      {
+        "type": "Hidden",
+        "value": "post",
+        "binding": {
+          "type": "zeebe:input",
+          "name": "method"
+        },
+        "condition": {
           "property": "operation",
           "oneOf": [
-            "createTask",
             "createProject"
           ]
         }
@@ -898,9 +955,22 @@
           "name": "method"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
-            "deleteTask",
+            "deleteTask"
+          ]
+        }
+      },
+      {
+        "type": "Hidden",
+        "value": "delete",
+        "binding": {
+          "type": "zeebe:input",
+          "name": "method"
+        },
+        "condition": {
+          "property": "projectOperation",
+          "oneOf": [
             "deleteProject"
           ]
         }
@@ -919,7 +989,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTasksFromProject"
           ]
@@ -933,7 +1003,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTasksFromProject"
           ]
@@ -947,7 +1017,7 @@
           "name": "queryParameters"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTasksFromProject"
           ]
@@ -967,7 +1037,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTaskById"
           ]
@@ -981,7 +1051,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "getTaskById"
           ]
@@ -1001,7 +1071,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "deleteTask"
           ]
@@ -1015,7 +1085,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "deleteTask"
           ]
@@ -1035,7 +1105,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -1055,7 +1125,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -1073,7 +1143,7 @@
           "name": "parentTaskId"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -1091,7 +1161,7 @@
           "name": "taskNotes"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -1105,7 +1175,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -1119,7 +1189,7 @@
           "name": "body"
         },
         "condition": {
-          "property": "operation",
+          "property": "taskOperation",
           "oneOf": [
             "createTask"
           ]
@@ -1137,7 +1207,7 @@
           "name": "workspaceId"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjects"
           ]
@@ -1155,7 +1225,7 @@
           "name": "teamId"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjects"
           ]
@@ -1169,7 +1239,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjects"
           ]
@@ -1183,7 +1253,7 @@
           "name": "queryParameters"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjects"
           ]
@@ -1203,7 +1273,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjectById"
           ]
@@ -1217,7 +1287,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "getProjectById"
           ]
@@ -1237,7 +1307,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "createProjectInWorkspace"
           ]
@@ -1257,7 +1327,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "createProjectInWorkspace"
           ]
@@ -1275,7 +1345,7 @@
           "name": "projectNote"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "createProjectInWorkspace"
           ]
@@ -1289,7 +1359,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "createProjectInWorkspace"
           ]
@@ -1303,7 +1373,7 @@
           "name": "body"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "createProjectInWorkspace"
           ]
@@ -1323,7 +1393,7 @@
           "notEmpty": true
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "deleteProject"
           ]
@@ -1337,7 +1407,7 @@
           "name": "url"
         },
         "condition": {
-          "property": "operation",
+          "property": "projectOperation",
           "oneOf": [
             "deleteProject"
           ]

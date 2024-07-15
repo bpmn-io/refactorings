@@ -399,7 +399,7 @@
         "constraints": {
           "notEmpty": true,
           "pattern": {
-            "value": "^(=|https?://|\\{\\{secrets\\..+\\}\\}).*$",
+            "value": "^(=|(https?://|\\{\\{secrets\\..+\\}\\}).*$)",
             "message": "Must be an http(s) URL"
           }
         }
@@ -626,7 +626,7 @@
         "constraints": {
           "notEmpty": true,
           "pattern": {
-            "value": "^(=|https?://|\\{\\{secrets\\..+\\}\\}).*$",
+            "value": "^(=|(https?://|\\{\\{secrets\\..+\\}\\}).*$)",
             "message": "Must be an http(s) URL"
           }
         }
@@ -853,7 +853,7 @@
       "constraints": {
         "notEmpty": true,
         "pattern": {
-          "value": "^(=|https?://|secrets\\..+|\\{\\{secrets\\..+\\}\\}).*$",
+          "value": "^(=|(https?://|secrets\\..+|\\{\\{secrets\\..+\\}\\}).*$)",
           "message": "Must be an http(s) URL"
         }
       }
@@ -1081,7 +1081,7 @@
         "constraints": {
           "notEmpty": true,
           "pattern": {
-            "value": "^(=|https?://|secrets\\..+|\\{\\{secrets\\..+\\}\\}).*$",
+            "value": "^(=|(https?://|secrets\\..+|\\{\\{secrets\\..+\\}\\}).*$)",
             "message": "Must be an http(s) URL"
           }
         }

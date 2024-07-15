@@ -1441,7 +1441,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.*|[0-9]+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "Must be a number"
           }
         },
@@ -1464,7 +1464,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.*|[0-9]+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "Must be a number"
           }
         },
@@ -2139,7 +2139,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.*|[0-9]+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "Must be a number"
           }
         },
@@ -2162,7 +2162,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.*|[0-9]+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "Must be a number"
           }
         },
@@ -2837,7 +2837,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.*|[0-9]+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "Must be a number"
           }
         },
@@ -2860,7 +2860,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.*|[0-9]+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "Must be a number"
           }
         },
@@ -3535,7 +3535,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.*|[0-9]+|secrets\\..+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|secrets\\..+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "Must be a number"
           }
         },
@@ -3558,7 +3558,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.*|[0-9]+|secrets\\..+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|secrets\\..+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "Must be a number"
           }
         },
@@ -4233,7 +4233,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.*|[0-9]|secrets.*|\\{\\{.*)+$",
+            "value": "^(=|([0-9]|secrets.*|\\{\\{.*)+$)",
             "message": "Must be a number."
           }
         },
@@ -4256,7 +4256,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.*|[0-9]|secrets.*|\\{\\{.*)+$",
+            "value": "^(=|([0-9]|secrets.*|\\{\\{.*)+$)",
             "message": "Must be a number."
           }
         },

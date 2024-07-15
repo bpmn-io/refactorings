@@ -177,7 +177,7 @@
         }
       },
       {
-        "id": "authenticationType",
+        "id": "authentication.clientAuthentication",
         "group": "authentication",
         "value": "basicAuthHeader",
         "type": "Hidden",
@@ -456,7 +456,7 @@
       },
       {
         "label": "Result expression",
-        "id": "resultExpressionGet",
+        "id": "resultExpressionGetBodyId",
         "description": "Expression to map the response into process variables. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/#result-expression\" target=\"_blank\">documentation</a>",
         "group": "output",
         "type": "String",
@@ -475,7 +475,7 @@
       },
       {
         "label": "Result expression",
-        "id": "resultExpressionGet",
+        "id": "resultExpressionGetStatus",
         "description": "Expression to map the response into process variables. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/#result-expression\" target=\"_blank\">documentation</a>",
         "group": "output",
         "type": "String",
@@ -524,7 +524,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.+|[0-9]+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "Must be a timeout in seconds (default value is 20 seconds) or a FEEL expression"
           }
         }
@@ -560,7 +560,7 @@
       },
       {
         "label": "Error expression",
-        "description": "Expression to handle errors. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/#bpmn-errors\" target=\"_blank\">documentation</a>",
+        "description": "Expression to handle errors. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/\" target=\"_blank\">documentation</a>",
         "group": "errors",
         "type": "Text",
         "feel": "required",
@@ -570,7 +570,7 @@
         }
       }
     ]
-  },  
+  },
   {
     "$schema": "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
     "name": "UiPath connector",
@@ -749,7 +749,7 @@
         }
       },
       {
-        "id": "authenticationType",
+        "id": "authentication.clientAuthentication",
         "group": "authentication",
         "value": "basicAuthHeader",
         "type": "Hidden",
@@ -1028,7 +1028,7 @@
       },
       {
         "label": "Result expression",
-        "id": "resultExpressionGet",
+        "id": "resultExpressionGetBodyId",
         "description": "Expression to map the response into process variables. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/#result-expression\" target=\"_blank\">documentation</a>",
         "group": "output",
         "type": "String",
@@ -1047,7 +1047,7 @@
       },
       {
         "label": "Result expression",
-        "id": "resultExpressionGet",
+        "id": "resultExpressionGetStatus",
         "description": "Expression to map the response into process variables. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/#result-expression\" target=\"_blank\">documentation</a>",
         "group": "output",
         "type": "String",
@@ -1096,7 +1096,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.+|[0-9]+|secrets\\.+|\\{\\{secrets\\..+\\}\\})$",
+            "value": "^(=|([0-9]+|secrets\\.+|\\{\\{secrets\\..+\\}\\})$)",
             "message": "Must be a timeout in seconds (default value is 20 seconds) or a FEEL expression"
           }
         }
@@ -1321,7 +1321,7 @@
         }
       },
       {
-        "id": "authenticationType",
+        "id": "authentication.clientAuthentication",
         "group": "authentication",
         "value": "basicAuthHeader",
         "type": "Hidden",
@@ -1600,7 +1600,7 @@
       },
       {
         "label": "Result expression",
-        "id": "resultExpressionGet",
+        "id": "resultExpressionGetBodyId",
         "description": "Expression to map the response into process variables. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/#result-expression\" target=\"_blank\">documentation</a>",
         "group": "output",
         "type": "String",
@@ -1619,7 +1619,7 @@
       },
       {
         "label": "Result expression",
-        "id": "resultExpressionGet",
+        "id": "resultExpressionGetStatus",
         "description": "Expression to map the response into process variables. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/#result-expression\" target=\"_blank\">documentation</a>",
         "group": "output",
         "type": "String",
@@ -1668,7 +1668,7 @@
         "constraints": {
           "notEmpty": false,
           "pattern": {
-            "value": "^(=.+|[0-9]+|secrets\\..+)$",
+            "value": "^(=|([0-9]+|secrets\\..+)$)",
             "message": "Must be a timeout in seconds (default value is 20 seconds) or a FEEL expression"
           }
         }

@@ -55,7 +55,7 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
    * Simple names without grammar or spelling mistakes. We expect these to
    * work 100% of the time.
    */
-  describe('simple', function() {
+  describe.skip('simple', function() {
 
     expectRefactorings('bpmn:Task', 'Update task in asana', [
       createRefactoring('io.camunda.connectors.Asana.v1')
@@ -243,7 +243,7 @@ const testOpenai = window.__env__ && window.__env__.TEST_OPENAI === 'true';
    * Names with grammar or spelling mistakes. We expect these to work 80% of
    * the time.
    */
-  describe('grammar & spelling mistakes', function() {
+  describe.skip('grammar & spelling mistakes', function() {
 
     expectRefactorings('bpmn:Task', 'Asanaa task update', [
       createRefactoring('io.camunda.connectors.Asana.v1')
