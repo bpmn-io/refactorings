@@ -189,6 +189,85 @@ describe('OpenAIElementTemplatesProvider', function() {
     }));
 
 
+    it('should create function description from element template description', inject(
+      function(elementRegistry, elementTemplates, openAIElementTemplatesProvider) {
+
+        // given
+        const fooTemplate = {
+          id: 'foo.template',
+          appliesTo: [ 'bpmn:Task' ],
+          description: 'foo',
+          properties: [],
+          category: {
+            id: 'connectors',
+            name: 'Connectors'
+          }
+        };
+
+        elementTemplates.set([
+          ...elementTemplates.getAll(),
+          fooTemplate
+        ]);
+
+        const element = elementRegistry.get('Task_1');
+
+        // when
+        const tools = openAIElementTemplatesProvider._getTools(element);
+
+        // then
+        expect(tools).to.exist;
+        expect(tools).to.have.length.above(0);
+
+        const fooTool = tools.find(tool => tool.function.name === 'foo_template');
+
+        expect(fooTool).to.exist;
+        expect(fooTool.function.description).to.eql('Description: foo');
+      }
+    ));
+
+
+    it('should create function description from element template description and keywords', inject(
+      function(elementRegistry, elementTemplates, openAIElementTemplatesProvider) {
+
+        // given
+        const fooTemplate = {
+          id: 'foo.template',
+          appliesTo: [ 'bpmn:Task' ],
+          description: 'foo',
+          properties: [],
+          category: {
+            id: 'connectors',
+            name: 'Connectors'
+          },
+          metadata: {
+            keywords: [
+              'bar',
+              'baz'
+            ]
+          }
+        };
+
+        elementTemplates.set([
+          ...elementTemplates.getAll(),
+          fooTemplate
+        ]);
+
+        const element = elementRegistry.get('Task_1');
+
+        // when
+        const tools = openAIElementTemplatesProvider._getTools(element);
+
+        // then
+        expect(tools).to.exist;
+        expect(tools).to.have.length.above(0);
+
+        const fooTool = tools.find(tool => tool.function.name === 'foo_template');
+
+        expect(fooTool).to.exist;
+        expect(fooTool.function.description).to.eql('Description: foo, Keywords: "bar", "baz"');
+      }
+    ));
+
   });
 
 
