@@ -221,7 +221,8 @@ describe('OpenAIElementTemplatesProvider', function() {
         const fooTool = tools.find(tool => tool.function.name === 'foo_template');
 
         expect(fooTool).to.exist;
-        expect(fooTool.function.description).to.eql('Description: foo');
+        expect(fooTool.function.description).to.eql(`# Description:
+"foo"`);
       }
     ));
 
@@ -264,7 +265,11 @@ describe('OpenAIElementTemplatesProvider', function() {
         const fooTool = tools.find(tool => tool.function.name === 'foo_template');
 
         expect(fooTool).to.exist;
-        expect(fooTool.function.description).to.eql('Description: foo, Keywords: "bar", "baz"');
+        expect(fooTool.function.description).to.eql(`# Description:
+"foo"
+# Keywords:
+- "bar"
+- "baz"`);
       }
     ));
 
