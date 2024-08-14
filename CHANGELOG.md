@@ -6,6 +6,10 @@ All notable changes to [@bpmn-io/refactorings](https://github.com/bpmn-io/refact
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.3.0
+
+* `FEAT`: suggest templates available at runtime ([#27](https://github.com/bpmn-io/refactorings/pull/27))
+
 ## 0.2.2
 
 * `CHORE`: move context pad entry ([#26](https://github.com/bpmn-io/refactorings/pull/26))
