@@ -44,7 +44,7 @@
   "dependencies": {
     "@carbon/styles": "^1.53.1",
     "min-dash": "^4.2.1",
-    "min-dom": "^5.0.0"
+    "min-dom": "^4.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
@@ -103,6 +103,7 @@
   },
   "peerDependencies": {
     "bpmn-js": "*",
+    "bpmn-js-element-templates": "*",
     "diagram-js": "*"
   }
 }
