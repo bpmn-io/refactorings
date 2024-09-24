@@ -43,8 +43,7 @@
   },
   "dependencies": {
     "@carbon/styles": "^1.53.1",
-    "min-dash": "^4.2.1",
-    "min-dom": "^4.2.1"
+    "min-dash": "^4.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
@@ -83,6 +82,7 @@
     "karma-mocha": "^2.0.1",
     "karma-sinon-chai": "^2.0.2",
     "karma-webpack": "^5.0.0",
+    "min-dom": "^4.2.1",
     "mocha": "^10.2.0",
     "mocha-test-container-support": "^0.2.0",
     "node-sass": "^9.0.0",
