@@ -8,6 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 1.0.0
 
+* `FIX`: do not pre-fetch refactorings ([#31](https://github.com/bpmn-io/refactorings/pull/31))
 * `DEPS`: cleanup dependencies
 
 ## 0.3.0
