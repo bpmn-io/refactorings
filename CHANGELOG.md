@@ -6,6 +6,11 @@ All notable changes to [@bpmn-io/refactorings](https://github.com/bpmn-io/refact
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.1.0
+
+* `DEPS`: update to `min-dash@5.0.0`
+* `DEPS`: update to `min-dom@5.2.0`
+
 ## 1.0.0
 
 * `FIX`: do not pre-fetch refactorings ([#31](https://github.com/bpmn-io/refactorings/pull/31))
